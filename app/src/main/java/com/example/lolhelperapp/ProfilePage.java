@@ -6,11 +6,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.lolhelperapp.models.MatchList;
+import com.example.lolhelperapp.models.Participant;
+import com.example.lolhelperapp.models.ParticipantIdentity;
+import com.example.lolhelperapp.models.SingleMatch;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,9 +26,10 @@ import java.net.URL;
 
 public class ProfilePage extends AppCompatActivity {
 
+    final String key = "RGAPI-3eefd654-756c-43ae-a248-f08f62899fca";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String key = "RGAPI-19474d33-5c79-4d45-8e50-a8735bc0b977";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -49,7 +54,7 @@ public class ProfilePage extends AppCompatActivity {
         String stringUrl = "https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accId + "?api_key=" + key;
         if (!accId.isEmpty()) {
             MatchHistoryTask matches = new MatchHistoryTask();
-            matches.execute(stringUrl);
+            matches.execute(stringUrl, accId);
         }
 
         FloatingActionButton fab = findViewById(R.id.backer);
@@ -78,6 +83,85 @@ public class ProfilePage extends AppCompatActivity {
     private class MatchHistoryTask extends AsyncTask<String, String, String> {
 
         private String returner;
+        private String accId;
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String current = "";
+            accId = strings[1];
+            if (!strings[0].isEmpty()) {
+                String stringUrl = strings[0];
+                try {
+                    URL url;
+                    HttpURLConnection urlConnection = null;
+                    try {
+                        url = new URL(stringUrl);
+                        urlConnection = (HttpURLConnection) url.openConnection();
+                        InputStream in = urlConnection.getInputStream();
+
+                        InputStreamReader isw = new InputStreamReader(in);
+
+                        int data = isw.read();
+                        while (data != -1) {
+                            current += (char) data;
+                            data = isw.read();
+                        }
+                        returner = current;
+                        return current;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (urlConnection != null) {
+                            urlConnection.disconnect();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return "Exception: " + e.getMessage();
+                }
+            }
+            returner = current;
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String p) {
+            Gson gson = new Gson();
+            if (null != returner) {
+                MatchList matches = gson.fromJson(returner, MatchList.class);
+                LinearLayout lay = findViewById(R.id.layerout);
+                for (int i = 0; i < 20; i++) {
+                    String stringUrl = "https://na1.api.riotgames.com/lol/match/v4/matches/" + matches.getMatches().get(i).getGameId() + "?api_key=" + key;
+                    SingleMatchTask singleMatch = new SingleMatchTask();
+                    singleMatch.execute(stringUrl);
+                    ParticipantIdentity holder = new ParticipantIdentity();
+                    Participant actualHolder = new Participant();
+                    for(ParticipantIdentity j : singleMatch.looker.getParticipantIdentities()){
+                        if(j.getPlayer().getAccountId().equals(accId)){
+                            holder = j;
+                            break;
+                        }
+                    }
+                    for(Participant x : singleMatch.looker.getParticipants()){
+                        if(x.getParticipantId() == holder.getParticipantId()){
+                            actualHolder = x;
+                            break;
+                        }
+                    }
+                    TextView tv = new TextView(ProfilePage.this);
+                    String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Win: " + actualHolder.getStats().isWin();
+                    tv.setText(toSet);
+                    lay.addView(tv);
+                }
+            }
+        }
+    }
+
+    private class SingleMatchTask extends AsyncTask<String, String, String> {
+
+        private String  returner;
+        private SingleMatch looker;
+        private Gson gson = new Gson();
 
         @Override
         protected String doInBackground(String... strings) {
@@ -102,6 +186,7 @@ public class ProfilePage extends AppCompatActivity {
                         }
                         System.out.println(current);
                         returner = current;
+                        looker = gson.fromJson(returner, SingleMatch.class);
                         return current;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -120,20 +205,6 @@ public class ProfilePage extends AppCompatActivity {
             returner = current;
             return current;
         }
-
-        @Override
-        protected void onPostExecute(String p) {
-            Gson gson = new Gson();
-            if (null != returner) {
-                MatchList matches = gson.fromJson(returner, MatchList.class);
-                LinearLayout lay = findViewById(R.id.layerout);
-                for(int i = 0; i < 20 ; i ++){
-                    TextView tv = new TextView(ProfilePage.this);
-                    String toSet = matches.getMatches().get(i).getLane() + ": " + matches.getMatches().get(i).getRole();
-                    tv.setText(toSet);
-                    lay.addView(tv);
-                }
-            }
-        }
     }
+
 }

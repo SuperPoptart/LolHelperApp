@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchName(View view) {
-        String key = "RGAPI-19474d33-5c79-4d45-8e50-a8735bc0b977";
+        String key = "RGAPI-3eefd654-756c-43ae-a248-f08f62899fca";
         EditText name;
         name = (EditText) findViewById(R.id.editText);
         String nameOfSumm = name.getText().toString().trim();

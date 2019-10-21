@@ -2,27 +2,19 @@ package com.example.lolhelperapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.Image;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-
-    private EditText name;
-    private String key = "RGAPI-db34f005-bf2b-4dbb-9273-34a52680e9cb";
-    //    private String stringUrl = "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/"+Sname+"?api_key=" + key;
-    private String lameUrl = "https://u.gg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,30 +25,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchName(View view) {
+        String key = "RGAPI-19474d33-5c79-4d45-8e50-a8735bc0b977";
+        EditText name;
         name = (EditText) findViewById(R.id.editText);
         String nameOfSumm = name.getText().toString().trim();
         nameOfSumm = nameOfSumm.replaceAll("\\s+", "");
         String stringUrl = "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + nameOfSumm + "?api_key=" + key;
 
         UserSearchTask mUserTask = new UserSearchTask();
-        Map<String, String> user = new HashMap<String, String>();
         mUserTask.execute(stringUrl);
-        if(null != mUserTask.returner) {
-            String[] params = mUserTask.returner.split(",");
-            for (String s : params) {
-                user.put(s.split(":")[0].trim().replaceAll("[{\"]", ""), s.split(":")[1].trim().replaceAll("[}\"]", ""));
-            }
-            String ico = "http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/" + (String) user.get("profileIconId") + ".png ";
-            System.out.println(user.values());
-        }
     }
 
     private class UserSearchTask extends AsyncTask<String, String, String> {
-        public String returner;
-
-        public UserSearchTask() {
-            super();
-        }
+        private String returner;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -97,6 +78,25 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(current);
             returner = current;
             return current;
+        }
+
+        @Override
+        protected void onPostExecute(String p) {
+            Map<String, String> user = new HashMap<String, String>();
+            if(null != returner) {
+                Bundle b = new Bundle();
+                System.out.println("RAN ONCE");
+                String[] params = returner.split(",");
+                for (String s : params) {
+                    user.put(s.split(":")[0].trim().replaceAll("[{\"]", ""), s.split(":")[1].trim().replaceAll("[}\"]", ""));
+                    b.putString(s.split(":")[0].trim().replaceAll("[{\"]", ""), s.split(":")[1].trim().replaceAll("[}\"]", ""));
+                }
+                System.out.println(user.values());
+                Intent intent = new Intent(new Intent(getApplicationContext(), ProfilePage.class));
+                intent.putExtras(b);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 }

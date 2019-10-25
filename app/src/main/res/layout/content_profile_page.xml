@@ -9,10 +9,10 @@
     tools:showIn="@layout/activity_profile_page">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/profileIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -22,10 +22,10 @@
         android:id="@+id/sumName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="47dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/profileIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -36,7 +36,7 @@
         android:layout_marginTop="3dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/profileIcon" />
 
     <TextView
         android:id="@+id/levelLabel"
@@ -46,13 +46,27 @@
         android:layout_marginTop="3dp"
         android:text="Lvl:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/profileIcon" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="20dp"
+        android:clickable="true"
+        android:onClick="favoriteAccount"
+        app:backgroundTint="#009688"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/btn_star_big_off" />
 
     <ScrollView
         android:id="@+id/matches"
         android:layout_width="412dp"
         android:layout_height="549dp"
         android:layout_marginTop="8dp"
+        android:paddingHorizontal="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/level">
 
@@ -64,5 +78,16 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/toRadar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:onClick="toRadar"
+        android:text="Radar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/floatingActionButton" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

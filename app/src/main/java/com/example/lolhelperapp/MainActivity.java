@@ -2,19 +2,32 @@ package com.example.lolhelperapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+
+    private String[] names = new String[0];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,10 +35,43 @@ public class MainActivity extends AppCompatActivity {
 //        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String filename = "RGAPI-46084dd2-9207-4edd-b1fb-9bba018d0a1a";
+        FileInputStream inputStream;
+        File file = new File(getFilesDir(), filename);
+        String holder = "";
+        try{
+            inputStream = openFileInput(file.getName());
+            if( inputStream != null){
+                InputStreamReader isr = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(isr);
+                String reciever = "";
+                StringBuilder sb = new StringBuilder();
+
+                while( (reciever = bufferedReader.readLine()) != null) {
+                    sb.append(reciever);
+                }
+
+                inputStream.close();
+                holder = sb.toString();
+                System.out.println(holder);
+                names = new String[holder.split("#").length];
+                names = holder.split("#");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for(String singleName : names){
+            LinearLayout lay = findViewById(R.id.faves);
+            TextView viewName = new TextView(MainActivity.this);
+            viewName.setText(singleName);
+            lay.addView(viewName);
+        }
     }
 
     public void searchName(View view) {
-        String key = "RGAPI-3eefd654-756c-43ae-a248-f08f62899fca";
+        String key = "RGAPI-4444d43a-bede-4d4c-bed3-ad2618be341a";
         EditText name;
         name = (EditText) findViewById(R.id.editText);
         String nameOfSumm = name.getText().toString().trim();
@@ -88,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("RAN ONCE");
                 String[] params = returner.split(",");
                 for (String s : params) {
-                    user.put(s.split(":")[0].trim().replaceAll("[{\"]", ""), s.split(":")[1].trim().replaceAll("[}\"]", ""));
                     b.putString(s.split(":")[0].trim().replaceAll("[{\"]", ""), s.split(":")[1].trim().replaceAll("[}\"]", ""));
                 }
                 System.out.println(user.values());

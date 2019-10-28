@@ -13,6 +13,7 @@ import com.example.lolhelperapp.models.ParticipantIdentity;
 import com.example.lolhelperapp.models.SingleMatch;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
+import com.merakianalytics.orianna.Orianna;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -32,6 +33,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class ProfilePage extends AppCompatActivity {
@@ -47,7 +54,7 @@ public class ProfilePage extends AppCompatActivity {
         setSupportActionBar(toolbar);
         TextView summoner = findViewById(R.id.sumName);
         TextView level = findViewById(R.id.level);
-        ImageView profileIcon = findViewById(R.id.profileIcon);
+        ImageView profileIcon = findViewById(R.id.profileIcon2);
         String accId = "";
         Bundle bundle = getIntent().getExtras();
 
@@ -56,7 +63,7 @@ public class ProfilePage extends AppCompatActivity {
             summoner.setText(bundle.getString("name"));
             level.setText(bundle.getString("summonerLevel"));
             String ico = "http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/" + bundle.getString("profileIconId") + ".png";
-//            profileIcon.setImageDrawable(LoadImageFromWebOperations(ico));
+            profileIcon.setImageDrawable(LoadImageFromWebOperations(ico));
             accId = bundle.getString("accountId");
         } else {
             System.out.println("ACTUAL ERROR");
@@ -83,15 +90,15 @@ public class ProfilePage extends AppCompatActivity {
         FileInputStream inputStream;
         File file = new File(getFilesDir(), filename);
         String holder = "";
-        try{
+        try {
             inputStream = openFileInput(file.getName());
-            if( inputStream != null){
+            if (inputStream != null) {
                 InputStreamReader isr = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(isr);
                 String reciever = "";
                 StringBuilder sb = new StringBuilder();
 
-                while( (reciever = bufferedReader.readLine()) != null) {
+                while ((reciever = bufferedReader.readLine()) != null) {
                     sb.append(reciever);
                 }
 
@@ -107,7 +114,7 @@ public class ProfilePage extends AppCompatActivity {
 
     }
 
-    public void favoriteAccount(View view){
+    public void favoriteAccount(View view) {
         Bundle bundle = getIntent().getExtras();
         String filename = "favorites.txt";
         String fileContents = bundle.getString("name");
@@ -122,7 +129,7 @@ public class ProfilePage extends AppCompatActivity {
         }
     }
 
-    public void toRadar(View view){
+    public void toRadar(View view) {
         Intent intent = new Intent(new Intent(getApplicationContext(), RadarActivity.class));
         startActivity(intent);
         finish();
@@ -144,6 +151,12 @@ public class ProfilePage extends AppCompatActivity {
 
         private String returner;
         private String accId;
+        private List<Integer> totalCsScore = new ArrayList<>();
+        private List<Integer> totalVersitilityScore = new ArrayList<>();
+        private List<Integer> totalConsistancyScore = new ArrayList<>();
+        private List<Integer> totalObjectivesScore = new ArrayList<>();
+        private List<Integer> totalAggressionScore = new ArrayList<>();
+        private List<Integer> totalVisionScore = new ArrayList<>();
 
         @Override
         protected String doInBackground(String... strings) {
@@ -191,11 +204,29 @@ public class ProfilePage extends AppCompatActivity {
                 MatchList matches = gson.fromJson(returner, MatchList.class);
                 int games = 20;
                 for (int i = 0; i < games; i++) {
-                    if(matches.getMatches().get(i).getQueue() == 440 || matches.getMatches().get(i).getQueue() == 430 || matches.getMatches().get(i).getQueue() == 420 || matches.getMatches().get(i).getQueue() == 450) {
+                    if (matches.getMatches().get(i).getQueue() == 440 || matches.getMatches().get(i).getQueue() == 430 || matches.getMatches().get(i).getQueue() == 420 || matches.getMatches().get(i).getQueue() == 450) {
                         String stringUrl = "https://na1.api.riotgames.com/lol/match/v4/matches/" + matches.getMatches().get(i).getGameId() + "?api_key=" + key;
                         SingleMatchTask singleMatch = new SingleMatchTask();
                         singleMatch.execute(stringUrl, accId, String.valueOf(matches.getMatches().get(i).getTimestamp()));
-                    }else{
+//                        if (totalCsScore.size() != 5 && singleMatch.getStatus() == Status.FINISHED) {
+//                            totalCsScore.add(singleMatch.csScore);
+//                            System.out.println(singleMatch.csScore);
+//                            totalVersitilityScore.add(singleMatch.versScore);
+//                            System.out.println(singleMatch.versScore);
+//                            totalConsistancyScore.add(singleMatch.consScore);
+//                            System.out.println(singleMatch.consScore);
+//                            totalObjectivesScore.add(singleMatch.objecScore);
+//                            System.out.println(singleMatch.objecScore);
+//                            totalAggressionScore.add(singleMatch.aggScore);
+//                            System.out.println(singleMatch.aggScore);
+//                            totalVisionScore.add(singleMatch.visScore);
+//                            System.out.println(singleMatch.visScore);
+//                        } else if (totalCsScore.size() == 5) {
+//                            findViewById(R.id.toRadar).setVisibility(View.VISIBLE);
+//                        } else {
+//                            System.out.println("Nothin");
+//                        }
+                    } else {
                         games++;
                     }
                 }
@@ -205,11 +236,17 @@ public class ProfilePage extends AppCompatActivity {
 
     private class SingleMatchTask extends AsyncTask<String, String, String> {
 
-        private String  returner;
+        private String returner;
         private SingleMatch looker;
         private Gson gson = new Gson();
         private String accId;
         private long gameTime;
+        private double csScore;
+        private int versScore;
+        private double consScore;
+        private double objecScore;
+        private double aggScore;
+        private double visScore;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -259,34 +296,69 @@ public class ProfilePage extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             LinearLayout lay = findViewById(R.id.layerout);
+            int team1kills = 0;
+            int team1deaths = 0;
+            int team1assists = 0;
+            int team2kills = 0;
+            int team2deaths = 0;
+            int team2assists = 0;
 
             ParticipantIdentity holder = new ParticipantIdentity();
             Participant actualHolder = new Participant();
-            for(ParticipantIdentity j : looker.getParticipantIdentities()){
-                if(j.getPlayer().getAccountId().equals(accId)){
+            for (ParticipantIdentity j : looker.getParticipantIdentities()) {
+                if (j.getPlayer().getAccountId().equals(accId)) {
                     holder = j;
                     break;
                 }
             }
-            for(Participant x : looker.getParticipants()){
-                if(x.getParticipantId() == holder.getParticipantId()){
+            for (Participant x : looker.getParticipants()) {
+                if (x.getTeamId() == 100) {
+                    team1kills += x.getStats().getKills();
+                    team1deaths += x.getStats().getDeaths();
+                    team1assists += x.getStats().getAssists();
+                } else {
+                    team2kills += x.getStats().getKills();
+                    team2deaths += x.getStats().getDeaths();
+                    team2assists += x.getStats().getAssists();
+                }
+                if (x.getParticipantId() == holder.getParticipantId()) {
                     actualHolder = x;
-                    break;
+
                 }
             }
             TextView tv = new TextView(ProfilePage.this);
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(gameTime);
-            long seconds = TimeUnit.MILLISECONDS.toSeconds(gameTime);
+            Date current = new Date(gameTime);
+            DateFormat df = new SimpleDateFormat("dd:MM:yy:HH:mm:ss:");
+//            df.format(current)
+            long minutes = TimeUnit.SECONDS.toMinutes(looker.getGameDuration());
+            int team = 0;
+            if (actualHolder.getTeamId() == 100) {
+            } else {
+                team = 1;
+            }
+            csScore = ((actualHolder.getStats().getNeutralMinionsKilled() + actualHolder.getStats().getTotalMinionsKilled()) / (int) minutes);
+            versScore = actualHolder.getChampionId();
+            if (actualHolder.getStats().getDeaths() == 0) {
+                consScore = 2468;
+            } else {
+                consScore = (actualHolder.getStats().getKills() + actualHolder.getStats().getAssists()) / actualHolder.getStats().getDeaths();
+            }
+            objecScore = actualHolder.getStats().getTurretKills();
+            if (team == 0) {
+                aggScore = ((actualHolder.getStats().getKills() + actualHolder.getStats().getAssists()) / team1kills) * 10;
+            } else {
+                aggScore = ((actualHolder.getStats().getKills() + actualHolder.getStats().getAssists()) / team2kills) * 10;
+            }
+            visScore = (actualHolder.getStats().getVisionScore() / (int) minutes) * 10;
 
-
-            if(actualHolder.getStats().isWin()) {
+            if (actualHolder.getStats().isWin()) {
                 tv.setBackgroundColor(Color.rgb(124, 192, 217));
-                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Win Time: " + minutes;
+                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Win Time: " + minutes + "m CS(" + csScore+"/min)";
                 tv.setText(toSet);
                 lay.addView(tv);
-            }else{
+            } else {
                 tv.setBackgroundColor(Color.rgb(255, 96, 96));
-                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Loss Time: " + minutes;
+                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Loss Time: " + minutes+ "m CS(" + csScore+"/min)";
                 tv.setText(toSet);
                 lay.addView(tv);
             }

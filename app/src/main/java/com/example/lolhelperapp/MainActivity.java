@@ -36,19 +36,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String filename = "RGAPI-46084dd2-9207-4edd-b1fb-9bba018d0a1a";
+        String filename = "favorites.txt";
         FileInputStream inputStream;
         File file = new File(getFilesDir(), filename);
         String holder = "";
-        try{
+        try {
             inputStream = openFileInput(file.getName());
-            if( inputStream != null){
+            if (inputStream != null) {
                 InputStreamReader isr = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(isr);
                 String reciever = "";
                 StringBuilder sb = new StringBuilder();
 
-                while( (reciever = bufferedReader.readLine()) != null) {
+                while ((reciever = bufferedReader.readLine()) != null) {
                     sb.append(reciever);
                 }
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        for(String singleName : names){
+        for (String singleName : names) {
             LinearLayout lay = findViewById(R.id.faves);
             TextView viewName = new TextView(MainActivity.this);
             viewName.setText(singleName);
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchName(View view) {
-        String key = "RGAPI-4444d43a-bede-4d4c-bed3-ad2618be341a";
+        String key = "RGAPI-46084dd2-9207-4edd-b1fb-9bba018d0a1a";
         EditText name;
         name = (EditText) findViewById(R.id.editText);
         String nameOfSumm = name.getText().toString().trim();
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String p) {
             Map<String, String> user = new HashMap<String, String>();
-            if(null != returner) {
+            if (null != returner) {
                 Bundle b = new Bundle();
                 System.out.println("RAN ONCE");
                 String[] params = returner.split(",");

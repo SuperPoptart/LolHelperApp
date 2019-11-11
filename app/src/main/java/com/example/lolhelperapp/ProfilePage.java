@@ -7,26 +7,34 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.example.lolhelperapp.models.Match;
 import com.example.lolhelperapp.models.MatchList;
 import com.example.lolhelperapp.models.Participant;
 import com.example.lolhelperapp.models.ParticipantIdentity;
 import com.example.lolhelperapp.models.SingleMatch;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.gson.Gson;
-import com.merakianalytics.orianna.Orianna;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.OrientationHelper;
 
 import android.view.View;
+import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,16 +46,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class ProfilePage extends AppCompatActivity {
 
-    final String key = "RGAPI-46084dd2-9207-4edd-b1fb-9bba018d0a1a";
+    final String key = "RGAPI-866615d8-0fd8-4081-824d-0d148632bb28";
+
     private String[] names = new String[0];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -70,8 +80,8 @@ public class ProfilePage extends AppCompatActivity {
         }
 
         String stringUrl = "https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accId + "?api_key=" + key;
+        MatchHistoryTask matches = new MatchHistoryTask();
         if (!accId.isEmpty()) {
-            MatchHistoryTask matches = new MatchHistoryTask();
             matches.execute(stringUrl, accId);
         }
 
@@ -151,6 +161,7 @@ public class ProfilePage extends AppCompatActivity {
 
         private String returner;
         private String accId;
+        private List<String> gameIds = new ArrayList<>();
         private List<Integer> totalCsScore = new ArrayList<>();
         private List<Integer> totalVersitilityScore = new ArrayList<>();
         private List<Integer> totalConsistancyScore = new ArrayList<>();
@@ -200,34 +211,26 @@ public class ProfilePage extends AppCompatActivity {
         @Override
         protected void onPostExecute(String p) {
             Gson gson = new Gson();
+            MatchList matches = gson.fromJson(returner, MatchList.class);
+            List<SingleMatch> allMatches = new ArrayList<>();
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("singleMatch");
+
             if (null != returner) {
-                MatchList matches = gson.fromJson(returner, MatchList.class);
                 int games = 20;
                 for (int i = 0; i < games; i++) {
-                    if (matches.getMatches().get(i).getQueue() == 440 || matches.getMatches().get(i).getQueue() == 430 || matches.getMatches().get(i).getQueue() == 420 || matches.getMatches().get(i).getQueue() == 450) {
+                    if (matches.getMatches().get(i).getQueue() == 440 || matches.getMatches().get(i).getQueue() == 430 || matches.getMatches().get(i).getQueue() == 420 || matches.getMatches().get(i).getQueue() == 450 || matches.getMatches().get(i).getQueue() == 400) {
                         String stringUrl = "https://na1.api.riotgames.com/lol/match/v4/matches/" + matches.getMatches().get(i).getGameId() + "?api_key=" + key;
+//                        gameIds.add(stringUrl);
+                        System.out.println(matches.getMatches().get(i).getGameId());
                         SingleMatchTask singleMatch = new SingleMatchTask();
-                        singleMatch.execute(stringUrl, accId, String.valueOf(matches.getMatches().get(i).getTimestamp()));
-//                        if (totalCsScore.size() != 5 && singleMatch.getStatus() == Status.FINISHED) {
-//                            totalCsScore.add(singleMatch.csScore);
-//                            System.out.println(singleMatch.csScore);
-//                            totalVersitilityScore.add(singleMatch.versScore);
-//                            System.out.println(singleMatch.versScore);
-//                            totalConsistancyScore.add(singleMatch.consScore);
-//                            System.out.println(singleMatch.consScore);
-//                            totalObjectivesScore.add(singleMatch.objecScore);
-//                            System.out.println(singleMatch.objecScore);
-//                            totalAggressionScore.add(singleMatch.aggScore);
-//                            System.out.println(singleMatch.aggScore);
-//                            totalVisionScore.add(singleMatch.visScore);
-//                            System.out.println(singleMatch.visScore);
-//                        } else if (totalCsScore.size() == 5) {
-//                            findViewById(R.id.toRadar).setVisibility(View.VISIBLE);
-//                        } else {
-//                            System.out.println("Nothin");
-//                        }
-                    } else {
+                        singleMatch.execute(stringUrl, accId, String.valueOf(matches.getMatches().get(i).getTimestamp()), matches.getMatches().get(i).getRole());
+
+                    } else if (games < 150) {
                         games++;
+                    } else {
+                        break;
                     }
                 }
             }
@@ -237,7 +240,8 @@ public class ProfilePage extends AppCompatActivity {
     private class SingleMatchTask extends AsyncTask<String, String, String> {
 
         private String returner;
-        private SingleMatch looker;
+        private String roleR;
+        private SingleMatch looker = new SingleMatch();
         private Gson gson = new Gson();
         private String accId;
         private long gameTime;
@@ -250,8 +254,10 @@ public class ProfilePage extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
+            System.out.println("DOING SINGLE MATCH");
             String current = "";
             accId = strings[1];
+            roleR = strings[3];
             gameTime = Long.parseLong(strings[2]);
             if (!strings[0].isEmpty()) {
                 String stringUrl = strings[0];
@@ -271,7 +277,6 @@ public class ProfilePage extends AppCompatActivity {
                             current += (char) data;
                             data = isw.read();
                         }
-                        System.out.println(current);
                         returner = current;
                         looker = gson.fromJson(returner, SingleMatch.class);
                         return current;
@@ -305,6 +310,9 @@ public class ProfilePage extends AppCompatActivity {
 
             ParticipantIdentity holder = new ParticipantIdentity();
             Participant actualHolder = new Participant();
+            if (looker.getParticipantIdentities().isEmpty()) {
+                cancel(true);
+            }
             for (ParticipantIdentity j : looker.getParticipantIdentities()) {
                 if (j.getPlayer().getAccountId().equals(accId)) {
                     holder = j;
@@ -326,43 +334,153 @@ public class ProfilePage extends AppCompatActivity {
 
                 }
             }
-            TextView tv = new TextView(ProfilePage.this);
             Date current = new Date(gameTime);
-            DateFormat df = new SimpleDateFormat("dd:MM:yy:HH:mm:ss:");
-//            df.format(current)
+            DateFormat df = new SimpleDateFormat("dd:MM:yy", Locale.US);
+            String gamesDate = df.format(current);
+
             long minutes = TimeUnit.SECONDS.toMinutes(looker.getGameDuration());
             int team = 0;
             if (actualHolder.getTeamId() == 100) {
             } else {
                 team = 1;
             }
-            csScore = ((actualHolder.getStats().getNeutralMinionsKilled() + actualHolder.getStats().getTotalMinionsKilled()) / (int) minutes);
+            if ((int) minutes != 0) {
+                csScore = ((actualHolder.getStats().getNeutralMinionsKilled() + actualHolder.getStats().getTotalMinionsKilled()) / (int) minutes);
+            } else {
+                csScore = 0;
+            }
             versScore = actualHolder.getChampionId();
             if (actualHolder.getStats().getDeaths() == 0) {
                 consScore = 2468;
             } else {
-                consScore = (actualHolder.getStats().getKills() + actualHolder.getStats().getAssists()) / actualHolder.getStats().getDeaths();
+                consScore = ((double) actualHolder.getStats().getKills() + (double) actualHolder.getStats().getAssists()) / (double) actualHolder.getStats().getDeaths();
             }
             objecScore = actualHolder.getStats().getTurretKills();
-            if (team == 0) {
+            if (team == 0 && team1kills != 0) {
                 aggScore = ((actualHolder.getStats().getKills() + actualHolder.getStats().getAssists()) / team1kills) * 10;
-            } else {
+            } else if (team == 1 && team2kills != 0) {
                 aggScore = ((actualHolder.getStats().getKills() + actualHolder.getStats().getAssists()) / team2kills) * 10;
-            }
-            visScore = (actualHolder.getStats().getVisionScore() / (int) minutes) * 10;
-
-            if (actualHolder.getStats().isWin()) {
-                tv.setBackgroundColor(Color.rgb(124, 192, 217));
-                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Win Time: " + minutes + "m CS(" + csScore+"/min)";
-                tv.setText(toSet);
-                lay.addView(tv);
             } else {
-                tv.setBackgroundColor(Color.rgb(255, 96, 96));
-                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Loss Time: " + minutes+ "m CS(" + csScore+"/min)";
-                tv.setText(toSet);
-                lay.addView(tv);
+                aggScore = 10;
+            }
+            if ((int) minutes != 0) {
+                visScore = (actualHolder.getStats().getVisionScore() / (int) minutes) * 10;
+            } else {
+                visScore = 0;
             }
 
+            String superQueue = "";
+
+            switch (looker.getQueueId()) {
+                case 400:
+                    superQueue = "Normal";
+                    break;
+                case 420:
+                    superQueue = "Ranked Solo";
+                    break;
+                case 430:
+                    superQueue = "Blind";
+                    break;
+                case 440:
+                    superQueue = "Flex";
+                    break;
+                case 450:
+                    superQueue = "Aram";
+                    break;
+                default:
+                    break;
+            }
+
+            System.out.println("SCORES: CS: " + csScore + " VERSATILITY: " + versScore + " CONSISTENCY: " + consScore + " OBJECTIVES: " + objecScore + " AGGRESSION: " + aggScore + " VISION: " + visScore);
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("singleMatch");
+            myRef.child(String.valueOf(looker.getGameId())).setValue(looker);
+
+
+            HorizontalScrollView hSv = new HorizontalScrollView(ProfilePage.this);
+            LinearLayout horoLay = new LinearLayout(ProfilePage.this);
+            horoLay.setOrientation(LinearLayout.HORIZONTAL);
+
+            ScrollView firstSection = new ScrollView(ProfilePage.this);
+            LinearLayout firstLay = new LinearLayout(ProfilePage.this);
+            ScrollView secondSection = new ScrollView(ProfilePage.this);
+            LinearLayout secondLay = new LinearLayout(ProfilePage.this);
+            ScrollView fourthSection = new ScrollView(ProfilePage.this);
+            LinearLayout fourthLay = new LinearLayout(ProfilePage.this);
+
+            HorizontalScrollView thirdSection = new HorizontalScrollView(ProfilePage.this);
+            LinearLayout forThree = new LinearLayout(ProfilePage.this);
+            forThree.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout thirdOne = new LinearLayout(ProfilePage.this);
+            LinearLayout thirdTwo = new LinearLayout(ProfilePage.this);
+            LinearLayout thirdThree = new LinearLayout(ProfilePage.this);
+
+            TextView winOrLoss = new TextView(ProfilePage.this);
+            if (actualHolder.getStats().isWin()) {
+                hSv.setBackgroundColor(Color.rgb(124, 192, 217));
+//                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Win Time: " + minutes + "m CS(" + csScore + "/min) " + superQueue;
+                winOrLoss.setText("Win");
+                firstLay.addView(winOrLoss);
+            } else {
+                hSv.setBackgroundColor(Color.rgb(255, 96, 96));
+//                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Loss Time: " + minutes + "m CS(" + csScore + "/min) " + superQueue;
+                winOrLoss.setText("Loss");
+                firstLay.addView(winOrLoss);
+            }
+            ImageView champIcon = new ImageView(ProfilePage.this);
+            champIcon.setImageDrawable(Drawable.createFromPath("C:\\Users\\Richard Sanchez\\AndroidStudioProjects\\LolHelperApp\\app\\src\\main\\res\\drawable\\lolhelpericon.png"));
+            firstLay.addView(champIcon);
+            TextView lane = new TextView(ProfilePage.this);
+            lane.setText(roleR);
+            firstLay.addView(lane);
+            firstLay.setOrientation(LinearLayout.VERTICAL);
+            firstSection.addView(firstLay);
+
+            TextView kDA = new TextView(ProfilePage.this);
+            String kdaText = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists();
+            kDA.setText(kdaText);
+            secondLay.addView(kDA);
+            TextView kR = new TextView(ProfilePage.this);
+            if (consScore == 2468) {
+                kR.setText("Perfect");
+            } else {
+                kR.setText(String.valueOf(consScore));
+            }
+            secondLay.addView(kR);
+            secondLay.setOrientation(LinearLayout.VERTICAL);
+            secondSection.addView(secondLay);
+
+            ImageView item0 = new ImageView(ProfilePage.this);
+            ImageView item1 = new ImageView(ProfilePage.this);
+            ImageView item2 = new ImageView(ProfilePage.this);
+            ImageView item3 = new ImageView(ProfilePage.this);
+            ImageView item4 = new ImageView(ProfilePage.this);
+            ImageView item5 = new ImageView(ProfilePage.this);
+            thirdOne.addView(item0);
+            thirdOne.addView(item1);
+            thirdTwo.addView(item2);
+            thirdTwo.addView(item3);
+            thirdThree.addView(item4);
+            thirdThree.addView(item5);
+            forThree.addView(thirdOne);
+            forThree.addView(thirdTwo);
+            forThree.addView(thirdThree);
+            thirdSection.addView(forThree);
+
+            ImageView trinket = new ImageView(ProfilePage.this);
+            fourthLay.addView(trinket);
+            TextView dater = new TextView(ProfilePage.this);
+            fourthLay.addView(dater);
+            fourthSection.addView(fourthLay);
+
+            horoLay.addView(firstSection);
+            horoLay.addView(secondSection);
+            horoLay.addView(thirdSection);
+            horoLay.addView(fourthSection);
+
+            hSv.addView(horoLay);
+            lay.addView(hSv);
         }
     }
 

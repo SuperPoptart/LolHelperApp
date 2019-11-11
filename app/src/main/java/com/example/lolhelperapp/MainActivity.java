@@ -2,11 +2,10 @@ package com.example.lolhelperapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Layout;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -15,24 +14,23 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private String[] names = new String[0];
+    final String key = "RGAPI-866615d8-0fd8-4081-824d-0d148632bb28";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//        StrictMode.setThreadPolicy(policy);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void searchName(View view) {
-        String key = "RGAPI-46084dd2-9207-4edd-b1fb-9bba018d0a1a";
+        System.out.println(key);
         EditText name;
         name = (EditText) findViewById(R.id.editText);
         String nameOfSumm = name.getText().toString().trim();
@@ -88,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             String current = "";
+            System.out.println(strings[0]);
             if (!strings[0].isEmpty()) {
                 String stringUrl = strings[0];
                 try {

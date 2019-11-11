@@ -8,11 +8,11 @@ public class Participant {
     private int spell1Id;
     private int spell2Id;
     private Stats stats;
-    private Timeline timeline;
+//    private Timeline timeline;
 
     public Participant(){
         stats = new Stats();
-        timeline = new Timeline();
+//        timeline = new Timeline();
     }
 
     public int getParticipantId() {
@@ -63,11 +63,11 @@ public class Participant {
         this.stats = stats;
     }
 
-    public Timeline getTimeline() {
-        return timeline;
-    }
-
-    public void setTimeline(Timeline timeline) {
-        this.timeline = timeline;
-    }
+//    public Timeline getTimeline() {
+//        return timeline;
+//    }
+//
+//    public void setTimeline(Timeline timeline) {
+//        this.timeline = timeline;
+//    }
 }

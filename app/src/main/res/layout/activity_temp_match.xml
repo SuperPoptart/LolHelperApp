@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/singleMatchView"
+    android:layout_width="409dp"
+    android:layout_height="170dp"
+    android:layout_marginStart="1dp"
+    android:layout_marginLeft="1dp"
+    android:layout_marginTop="1dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <LinearLayout
+        android:id="@+id/layerOut"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <ScrollView
+            android:id="@+id/firstSection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/firstLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/wlText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="W/L" />
+
+                <ImageView
+                    android:id="@+id/mainLogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="50dp"
+                    android:maxHeight="50dp"
+                    tools:srcCompat="@tools:sample/avatars[3]" />
+
+                <TextView
+                    android:id="@+id/laneText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lane" />
+            </LinearLayout>
+        </ScrollView>
+
+        <GridView
+            android:id="@+id/images"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ScrollView
+            android:id="@+id/secondSection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/secondLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/kdaText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="KDA" />
+
+                <TextView
+                    android:id="@+id/killRateText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="KR" />
+            </LinearLayout>
+        </ScrollView>
+
+
+        <ImageView
+            android:id="@+id/trinket"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:srcCompat="@tools:sample/avatars[0]" />
+    </LinearLayout>
+</HorizontalScrollView>

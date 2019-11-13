@@ -40,7 +40,7 @@ public class RadarActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_radar);
 
-        setTitle("RadarChartActivity");
+        setTitle("Skill Graph");
 
         chart = findViewById(R.id.chart1);
         chart.setBackgroundColor(Color.rgb(60, 65, 82));
@@ -48,9 +48,9 @@ public class RadarActivity extends AppCompatActivity {
         chart.getDescription().setEnabled(false);
 
         chart.setWebLineWidth(1f);
-        chart.setWebColor(Color.LTGRAY);
+        chart.setWebColor(Color.rgb(188, 142, 225));
         chart.setWebLineWidthInner(1f);
-        chart.setWebColorInner(Color.LTGRAY);
+        chart.setWebColorInner(Color.rgb(188, 142, 225));
         chart.setWebAlpha(100);
 
         // create a custom MarkerView (extend MarkerView) and specify the layout

@@ -2,6 +2,8 @@ package com.example.lolhelperapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -22,7 +24,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.OrientationHelper;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -40,6 +44,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ProfilePage extends AppCompatActivity {
 
-    final String key = "RGAPI-866615d8-0fd8-4081-824d-0d148632bb28";
+    final String key = "RGAPI-bec70f8e-6691-400a-af8d-281d5ae5e611";
 
     private String[] names = new String[0];
 
@@ -72,8 +77,16 @@ public class ProfilePage extends AppCompatActivity {
         if (bundle != null) {
             summoner.setText(bundle.getString("name"));
             level.setText(bundle.getString("summonerLevel"));
-            String ico = "http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/" + bundle.getString("profileIconId") + ".png";
-            profileIcon.setImageDrawable(LoadImageFromWebOperations(ico));
+            String ico = "http://ddragon.leagueoflegends.com/cdn/9.22.1/img/profileicon/" + bundle.getString("profileIconId") + ".png";
+            System.out.println(ico);
+//            profileIcon.setImageBitmap(getBitmapFromURL(ico));
+            try {
+                URL url = new URL(ico);
+                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                profileIcon.setImageBitmap(bmp);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             accId = bundle.getString("accountId");
         } else {
             System.out.println("ACTUAL ERROR");
@@ -124,6 +137,11 @@ public class ProfilePage extends AppCompatActivity {
 
     }
 
+    /**
+     * Simple function for adding an account to favorites
+     *
+     * @param view Passes current view
+     */
     public void favoriteAccount(View view) {
         Bundle bundle = getIntent().getExtras();
         String filename = "favorites.txt";
@@ -139,24 +157,57 @@ public class ProfilePage extends AppCompatActivity {
         }
     }
 
+    /**
+     * Moves on to the radar activity
+     *
+     * @param view Passes current view
+     */
     public void toRadar(View view) {
         Intent intent = new Intent(new Intent(getApplicationContext(), RadarActivity.class));
         startActivity(intent);
-        finish();
     }
 
+    /**
+     * Working on images from the web
+     *
+     * @param url URL for image
+     * @return Drawable grabbed from the URL
+     */
     public static Drawable LoadImageFromWebOperations(String url) {
-        Drawable drawnIcon = null;
+//        Drawable drawnIcon = null;
         try {
             InputStream is = (InputStream) new URL(url).getContent();
-            drawnIcon = Drawable.createFromStream(is, "ddragon");
+            Drawable drawnIcon = Drawable.createFromStream(is, "src name");
             return drawnIcon;
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        return drawnIcon;
     }
 
+    /**
+     * returns image as a bitmap
+     *
+     * @param src image source
+     * @return the image
+     */
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Searches for a users match history using the api then calls the single match activity on each ID
+     */
     private class MatchHistoryTask extends AsyncTask<String, String, String> {
 
         private String returner;
@@ -237,6 +288,9 @@ public class ProfilePage extends AppCompatActivity {
         }
     }
 
+    /**
+     * Preforms a call to the API for a matches stats based on ID then fills the list
+     */
     private class SingleMatchTask extends AsyncTask<String, String, String> {
 
         private String returner;
@@ -300,7 +354,7 @@ public class ProfilePage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            LinearLayout lay = findViewById(R.id.layerout);
+            LinearLayout lay = (LinearLayout) findViewById(R.id.layerout);
             int team1kills = 0;
             int team1deaths = 0;
             int team1assists = 0;
@@ -397,90 +451,92 @@ public class ProfilePage extends AppCompatActivity {
             DatabaseReference myRef = database.getReference("singleMatch");
             myRef.child(String.valueOf(looker.getGameId())).setValue(looker);
 
-
-            HorizontalScrollView hSv = new HorizontalScrollView(ProfilePage.this);
-            LinearLayout horoLay = new LinearLayout(ProfilePage.this);
-            horoLay.setOrientation(LinearLayout.HORIZONTAL);
-
-            ScrollView firstSection = new ScrollView(ProfilePage.this);
-            LinearLayout firstLay = new LinearLayout(ProfilePage.this);
-            ScrollView secondSection = new ScrollView(ProfilePage.this);
-            LinearLayout secondLay = new LinearLayout(ProfilePage.this);
-            ScrollView fourthSection = new ScrollView(ProfilePage.this);
-            LinearLayout fourthLay = new LinearLayout(ProfilePage.this);
-
-            HorizontalScrollView thirdSection = new HorizontalScrollView(ProfilePage.this);
-            LinearLayout forThree = new LinearLayout(ProfilePage.this);
-            forThree.setOrientation(LinearLayout.HORIZONTAL);
-            LinearLayout thirdOne = new LinearLayout(ProfilePage.this);
-            LinearLayout thirdTwo = new LinearLayout(ProfilePage.this);
-            LinearLayout thirdThree = new LinearLayout(ProfilePage.this);
-
-            TextView winOrLoss = new TextView(ProfilePage.this);
-            if (actualHolder.getStats().isWin()) {
-                hSv.setBackgroundColor(Color.rgb(124, 192, 217));
-//                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Win Time: " + minutes + "m CS(" + csScore + "/min) " + superQueue;
-                winOrLoss.setText("Win");
-                firstLay.addView(winOrLoss);
-            } else {
-                hSv.setBackgroundColor(Color.rgb(255, 96, 96));
-//                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Loss Time: " + minutes + "m CS(" + csScore + "/min) " + superQueue;
-                winOrLoss.setText("Loss");
-                firstLay.addView(winOrLoss);
-            }
-            ImageView champIcon = new ImageView(ProfilePage.this);
-            champIcon.setImageDrawable(Drawable.createFromPath("C:\\Users\\Richard Sanchez\\AndroidStudioProjects\\LolHelperApp\\app\\src\\main\\res\\drawable\\lolhelpericon.png"));
-            firstLay.addView(champIcon);
-            TextView lane = new TextView(ProfilePage.this);
-            lane.setText(roleR);
-            firstLay.addView(lane);
-            firstLay.setOrientation(LinearLayout.VERTICAL);
-            firstSection.addView(firstLay);
-
-            TextView kDA = new TextView(ProfilePage.this);
-            String kdaText = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists();
-            kDA.setText(kdaText);
-            secondLay.addView(kDA);
-            TextView kR = new TextView(ProfilePage.this);
-            if (consScore == 2468) {
-                kR.setText("Perfect");
-            } else {
-                kR.setText(String.valueOf(consScore));
-            }
-            secondLay.addView(kR);
-            secondLay.setOrientation(LinearLayout.VERTICAL);
-            secondSection.addView(secondLay);
-
-            ImageView item0 = new ImageView(ProfilePage.this);
-            ImageView item1 = new ImageView(ProfilePage.this);
-            ImageView item2 = new ImageView(ProfilePage.this);
-            ImageView item3 = new ImageView(ProfilePage.this);
-            ImageView item4 = new ImageView(ProfilePage.this);
-            ImageView item5 = new ImageView(ProfilePage.this);
-            thirdOne.addView(item0);
-            thirdOne.addView(item1);
-            thirdTwo.addView(item2);
-            thirdTwo.addView(item3);
-            thirdThree.addView(item4);
-            thirdThree.addView(item5);
-            forThree.addView(thirdOne);
-            forThree.addView(thirdTwo);
-            forThree.addView(thirdThree);
-            thirdSection.addView(forThree);
-
-            ImageView trinket = new ImageView(ProfilePage.this);
-            fourthLay.addView(trinket);
-            TextView dater = new TextView(ProfilePage.this);
-            fourthLay.addView(dater);
-            fourthSection.addView(fourthLay);
-
-            horoLay.addView(firstSection);
-            horoLay.addView(secondSection);
-            horoLay.addView(thirdSection);
-            horoLay.addView(fourthSection);
-
-            hSv.addView(horoLay);
-            lay.addView(hSv);
+            View tester = findViewById(R.id.match1);
+            TextView kdaText = (TextView) tester.findViewById(R.id.kdaText);
+//
+//            HorizontalScrollView hSv = new HorizontalScrollView(ProfilePage.this);
+//            LinearLayout horoLay = new LinearLayout(ProfilePage.this);
+//            horoLay.setOrientation(LinearLayout.HORIZONTAL);
+//
+//            ScrollView firstSection = new ScrollView(ProfilePage.this);
+//            LinearLayout firstLay = new LinearLayout(ProfilePage.this);
+//            ScrollView secondSection = new ScrollView(ProfilePage.this);
+//            LinearLayout secondLay = new LinearLayout(ProfilePage.this);
+//            ScrollView fourthSection = new ScrollView(ProfilePage.this);
+//            LinearLayout fourthLay = new LinearLayout(ProfilePage.this);
+//
+//            HorizontalScrollView thirdSection = new HorizontalScrollView(ProfilePage.this);
+//            LinearLayout forThree = new LinearLayout(ProfilePage.this);
+//            forThree.setOrientation(LinearLayout.HORIZONTAL);
+//            LinearLayout thirdOne = new LinearLayout(ProfilePage.this);
+//            LinearLayout thirdTwo = new LinearLayout(ProfilePage.this);
+//            LinearLayout thirdThree = new LinearLayout(ProfilePage.this);
+//
+//            TextView winOrLoss = new TextView(ProfilePage.this);
+//            if (actualHolder.getStats().isWin()) {
+//                hSv.setBackgroundColor(Color.rgb(124, 192, 217));
+////                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Win Time: " + minutes + "m CS(" + csScore + "/min) " + superQueue;
+//                winOrLoss.setText("Win");
+//                firstLay.addView(winOrLoss);
+//            } else {
+//                hSv.setBackgroundColor(Color.rgb(255, 96, 96));
+////                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Loss Time: " + minutes + "m CS(" + csScore + "/min) " + superQueue;
+//                winOrLoss.setText("Loss");
+//                firstLay.addView(winOrLoss);
+//            }
+//            ImageView champIcon = new ImageView(ProfilePage.this);
+//            champIcon.setImageDrawable(Drawable.createFromPath("C:\\Users\\Richard Sanchez\\AndroidStudioProjects\\LolHelperApp\\app\\src\\main\\res\\drawable\\lolhelpericon.png"));
+//            firstLay.addView(champIcon);
+//            TextView lane = new TextView(ProfilePage.this);
+//            lane.setText(roleR);
+//            firstLay.addView(lane);
+//            firstLay.setOrientation(LinearLayout.VERTICAL);
+//            firstSection.addView(firstLay);
+//
+//            TextView kDA = new TextView(ProfilePage.this);
+//            String kdaText = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists();
+//            kDA.setText(kdaText);
+//            secondLay.addView(kDA);
+//            TextView kR = new TextView(ProfilePage.this);
+//            if (consScore == 2468) {
+//                kR.setText("Perfect");
+//            } else {
+//                kR.setText(String.valueOf(consScore));
+//            }
+//            secondLay.addView(kR);
+//            secondLay.setOrientation(LinearLayout.VERTICAL);
+//            secondSection.addView(secondLay);
+//
+//            ImageView item0 = new ImageView(ProfilePage.this);
+//            ImageView item1 = new ImageView(ProfilePage.this);
+//            ImageView item2 = new ImageView(ProfilePage.this);
+//            ImageView item3 = new ImageView(ProfilePage.this);
+//            ImageView item4 = new ImageView(ProfilePage.this);
+//            ImageView item5 = new ImageView(ProfilePage.this);
+//            thirdOne.addView(item0);
+//            thirdOne.addView(item1);
+//            thirdTwo.addView(item2);
+//            thirdTwo.addView(item3);
+//            thirdThree.addView(item4);
+//            thirdThree.addView(item5);
+//            forThree.addView(thirdOne);
+//            forThree.addView(thirdTwo);
+//            forThree.addView(thirdThree);
+//            thirdSection.addView(forThree);
+//
+//            ImageView trinket = new ImageView(ProfilePage.this);
+//            fourthLay.addView(trinket);
+//            TextView dater = new TextView(ProfilePage.this);
+//            fourthLay.addView(dater);
+//            fourthSection.addView(fourthLay);
+//
+//            horoLay.addView(firstSection);
+//            horoLay.addView(secondSection);
+//            horoLay.addView(thirdSection);
+//            horoLay.addView(fourthSection);
+//
+//            hSv.addView(horoLay);
+//            lay.addView(hSv);
         }
     }
 

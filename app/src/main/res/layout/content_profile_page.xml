@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ProfilePage"
-    tools:showIn="@layout/activity_profile_page">
+    tools:showIn="@layout/activity_profile_page"
+    android:background="@drawable/gradient">
 
     <ImageView
         android:id="@+id/profileIcon"
@@ -66,7 +67,7 @@
         android:layout_marginEnd="20dp"
         android:clickable="true"
         android:onClick="favoriteAccount"
-        app:backgroundTint="#009688"
+        app:backgroundTint="#2E2651"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/btn_star_big_off" />
@@ -85,6 +86,86 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <include
+                layout="@layout/activity_temp_match"
+                android:id="@+id/match1" />
+
+            <include
+                android:id="@+id/match2"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match3"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match4"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match5"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match6"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match7"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match8"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match9"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match10"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match11"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match12"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match13"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match14"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match15"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match16"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match17"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match18"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match19"
+                layout="@layout/activity_temp_match" />
+
+            <include
+                android:id="@+id/match20"
+                layout="@layout/activity_temp_match" />
 
         </LinearLayout>
     </ScrollView>

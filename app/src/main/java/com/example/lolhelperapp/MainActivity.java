@@ -2,11 +2,13 @@ package com.example.lolhelperapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,7 +27,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private String[] names = new String[0];
-    final String key = "RGAPI-866615d8-0fd8-4081-824d-0d148632bb28";
+    final String key = "RGAPI-bec70f8e-6691-400a-af8d-281d5ae5e611";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,28 +62,44 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        for (String singleName : names) {
+        for (final String singleName : names) {
+            final MainActivity mainAct = this;
             LinearLayout lay = findViewById(R.id.faves);
-            TextView viewName = new TextView(MainActivity.this);
-            viewName.setText(singleName);
-            lay.addView(viewName);
+            Button favoriteButton = new Button(MainActivity.this);
+            favoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String nameToSend = singleName.trim();
+                    nameToSend = nameToSend.replaceAll("\\s+", "");
+                    String stringUrl = "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + nameToSend + "?api_key=" + key;
+
+                    UserSearchTask mUserTask = new UserSearchTask(mainAct);
+                    mUserTask.execute(stringUrl);
+                }
+            });
+            favoriteButton.setText(singleName);
+            lay.addView(favoriteButton);
         }
     }
 
     public void searchName(View view) {
-        System.out.println(key);
         EditText name;
         name = (EditText) findViewById(R.id.editText);
         String nameOfSumm = name.getText().toString().trim();
         nameOfSumm = nameOfSumm.replaceAll("\\s+", "");
         String stringUrl = "https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + nameOfSumm + "?api_key=" + key;
 
-        UserSearchTask mUserTask = new UserSearchTask();
+        UserSearchTask mUserTask = new UserSearchTask(this);
         mUserTask.execute(stringUrl);
     }
 
     private class UserSearchTask extends AsyncTask<String, String, String> {
         private String returner;
+        public MainActivity mainer;
+
+        public UserSearchTask(MainActivity a){
+            this.mainer = a;
+        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -128,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String p) {
             Map<String, String> user = new HashMap<String, String>();
-            if (null != returner) {
+            if (null != returner && !returner.isEmpty()) {
                 Bundle b = new Bundle();
                 System.out.println("RAN ONCE");
                 String[] params = returner.split(",");
@@ -140,6 +158,11 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtras(b);
                 startActivity(intent);
                 finish();
+            }else{
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mainer);
+                alertDialogBuilder.setMessage("User could not be found, tap anywhere to continue.");
+                AlertDialog shower = alertDialogBuilder.create();
+                shower.show();
             }
         }
     }

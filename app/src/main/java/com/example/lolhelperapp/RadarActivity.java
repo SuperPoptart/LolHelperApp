@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
@@ -43,7 +44,7 @@ public class RadarActivity extends AppCompatActivity {
         setTitle("Skill Graph");
 
         chart = findViewById(R.id.chart1);
-        chart.setBackgroundColor(Color.rgb(60, 65, 82));
+        chart.setBackgroundColor(Color.rgb(46, 38, 81));
 
         chart.getDescription().setEnabled(false);
 
@@ -110,7 +111,8 @@ public class RadarActivity extends AppCompatActivity {
 
         ArrayList<RadarEntry> entries1 = new ArrayList<>();
         ArrayList<RadarEntry> entries2 = new ArrayList<>();
-
+        float smallest = 100;
+        int indexSmallest = 0;
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
         for (int i = 0; i < cnt; i++) {
@@ -119,6 +121,33 @@ public class RadarActivity extends AppCompatActivity {
 
             float val2 = (float) (Math.random() * mul) + min;
             entries2.add(new RadarEntry(val2));
+
+            if(val1 < smallest){
+                smallest = val1;
+                indexSmallest = i;
+            }
+        }
+
+        TextView helper = findViewById(R.id.helperText);
+        switch (indexSmallest){
+            case 0:
+                helper.setText("Farming low fffffffffffffffffffffffff");
+                break;
+            case 1:
+                helper.setText("Vision low vvvvvvvvvvvvvvvvvvvvvvvvvv");
+                break;
+            case 2:
+                helper.setText("Objectives low ooooooooooooooooooooo");
+                break;
+            case 3:
+                helper.setText("Aggression low aaaaaaaaaaaaaaaaaaaaa");
+                break;
+            case 4:
+                helper.setText("Consistency low ccccccccccccccccccccccccccc");
+                break;
+            case 5:
+                helper.setText("Versatility low sssssssssssssssssssssss");
+                break;
         }
 
         RadarDataSet set1 = new RadarDataSet(entries1, "Last Week");

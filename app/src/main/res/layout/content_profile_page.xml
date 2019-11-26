@@ -31,39 +31,42 @@
 
     <TextView
         android:id="@+id/sumName"
+        style="@style/TextWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="47dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="39dp"
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/profileIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/level"
+        style="@style/TextWhite"
         android:layout_width="35dp"
         android:layout_height="25dp"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileIcon" />
+        app:layout_constraintStart_toEndOf="@+id/levelLabel"
+        app:layout_constraintTop_toBottomOf="@+id/sumName" />
 
     <TextView
         android:id="@+id/levelLabel"
+        style="@style/TextWhite"
         android:layout_width="23dp"
         android:layout_height="24dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="5dp"
         android:text="Lvl:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileIcon" />
+        app:layout_constraintStart_toEndOf="@+id/profileIcon"
+        app:layout_constraintTop_toBottomOf="@+id/sumName" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="20dp"
         android:clickable="true"
         android:onClick="favoriteAccount"
@@ -76,10 +79,10 @@
         android:id="@+id/matches"
         android:layout_width="412dp"
         android:layout_height="549dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="13dp"
         android:paddingHorizontal="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/level">
+        app:layout_constraintTop_toBottomOf="@+id/toRadar">
 
         <LinearLayout
             android:id="@+id/layerout"
@@ -88,84 +91,124 @@
             android:orientation="vertical">
 
             <include
+                android:id="@+id/match1"
                 layout="@layout/activity_temp_match"
-                android:id="@+id/match1" />
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match2"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match3"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match4"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match5"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match6"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match7"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match8"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match9"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match10"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match11"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match12"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match13"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match14"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match15"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match16"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match17"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match18"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match19"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
             <include
                 android:id="@+id/match20"
-                layout="@layout/activity_temp_match" />
+                layout="@layout/activity_temp_match"
+                android:paddingBottom="10dp"
+                android:visibility="invisible" />
 
         </LinearLayout>
     </ScrollView>
@@ -179,6 +222,7 @@
         android:text="Radar"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
+        style="@style/ButtonStyle"
         app:layout_constraintTop_toBottomOf="@+id/floatingActionButton"
         tools:visibility="invisible" />
 

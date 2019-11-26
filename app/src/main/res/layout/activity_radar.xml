@@ -1,20 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="730dp">
 
-    <com.github.mikephil.charting.charts.RadarChart
-        android:id="@+id/chart1"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-    </com.github.mikephil.charting.charts.RadarChart>
-
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="backOneActivity"
-        android:text="Back" />
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+
+            <com.github.mikephil.charting.charts.RadarChart
+                android:id="@+id/chart1"
+                android:layout_width="match_parent"
+                android:layout_height="600dp"
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="100dp">
+
+            </com.github.mikephil.charting.charts.RadarChart>
+
+
+            <Button
+                android:id="@+id/backButton"
+                style="@style/ButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="backOneActivity"
+                android:text="Back" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/helperText"
+                style="@style/TextWhite"
+                android:backgroundTint="@color/colorAccent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="This is the filler text so i can see the text view not go to the bottom" />
+        </RelativeLayout>
+    </LinearLayout>
+</ScrollView>

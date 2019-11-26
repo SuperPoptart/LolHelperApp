@@ -1,90 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/singleMatchView"
-    android:layout_width="409dp"
-    android:layout_height="170dp"
-    android:layout_marginStart="1dp"
-    android:layout_marginLeft="1dp"
-    android:layout_marginTop="1dp"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <LinearLayout
-        android:id="@+id/layerOut"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+    <HorizontalScrollView
+        android:id="@+id/singleMatchView"
+        android:layout_width="409dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="1dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ScrollView
-            android:id="@+id/firstSection"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/layerOut"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/firstLayout"
+            <ScrollView
+                android:id="@+id/firstSection"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
-                <TextView
-                    android:id="@+id/wlText"
+                <LinearLayout
+                    android:id="@+id/firstLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="W/L" />
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/mainLogo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxWidth="50dp"
-                    android:maxHeight="50dp"
-                    tools:srcCompat="@tools:sample/avatars[3]" />
+                    <TextView
+                        android:id="@+id/wlText"
+                        style="@style/CenterText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="W/L" />
 
-                <TextView
-                    android:id="@+id/laneText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Lane" />
-            </LinearLayout>
-        </ScrollView>
+                    <ImageView
+                        android:id="@+id/characterIcon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:srcCompat="@tools:sample/avatars[0]" />
 
-        <GridView
-            android:id="@+id/images"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                    <TextView
+                        android:id="@+id/champName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/CenterText"
+                        android:text="TextView" />
 
-        <ScrollView
-            android:id="@+id/secondSection"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+                </LinearLayout>
+            </ScrollView>
 
-            <LinearLayout
-                android:id="@+id/secondLayout"
+            <ScrollView
+                android:id="@+id/secondSection"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:paddingRight="5dp">
 
-                <TextView
-                    android:id="@+id/kdaText"
+                <LinearLayout
+                    android:id="@+id/secondLayout"
+                    style="@style/CenterText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="KDA" />
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/killRateText"
+                    <TextView
+                        android:id="@+id/kdaText"
+                        style="@style/CenterText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="KDA" />
+
+                    <TextView
+                        android:id="@+id/killRateText"
+                        style="@style/CenterText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="KR" />
+
+                    <TextView
+                        android:id="@+id/laneText"
+                        style="@style/CenterText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Lane" />
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/roleText"-->
+<!--                        style="@style/CenterText"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="TextView" />-->
+                </LinearLayout>
+            </ScrollView>
+
+            <ScrollView
+                android:id="@+id/thridSection"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingRight="5dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="KR" />
-            </LinearLayout>
-        </ScrollView>
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/gameTimestamp"
+                        style="@style/CenterText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/totalCs"
+                        style="@style/CenterText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/csPerMin"
+                        style="@style/CenterText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+                </LinearLayout>
+            </ScrollView>
+
+            <HorizontalScrollView
+                android:id="@+id/itemViewHolder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
 
 
-        <ImageView
-            android:id="@+id/trinket"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:srcCompat="@tools:sample/avatars[0]" />
-    </LinearLayout>
-</HorizontalScrollView>
+                    <ScrollView
+                        android:id="@+id/itemSet1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/item1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:srcCompat="@tools:sample/avatars[0]" />
+
+                            <ImageView
+                                android:id="@+id/item4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:srcCompat="@tools:sample/avatars[0]" />
+                        </LinearLayout>
+                    </ScrollView>
+
+                    <ScrollView
+                        android:id="@+id/itemSet2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/item2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:srcCompat="@tools:sample/avatars" />
+
+                            <ImageView
+                                android:id="@+id/item5"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:srcCompat="@tools:sample/avatars" />
+                        </LinearLayout>
+                    </ScrollView>
+
+                    <ScrollView
+                        android:id="@+id/itemSet3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/item3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:srcCompat="@tools:sample/avatars" />
+
+                            <ImageView
+                                android:id="@+id/item6"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:srcCompat="@tools:sample/avatars" />
+                        </LinearLayout>
+                    </ScrollView>
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <ScrollView
+                android:id="@+id/lastSection"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/trinket"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        tools:srcCompat="@tools:sample/avatars[0]" />
+
+                    <TextView
+                        android:id="@+id/visionText"
+                        style="@style/CenterText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </HorizontalScrollView>
+</RelativeLayout>

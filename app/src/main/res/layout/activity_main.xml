@@ -7,26 +7,38 @@
     tools:context=".MainActivity"
     android:background="@drawable/gradient">
 
-    <EditText
-        android:id="@+id/editText"
+    <ImageView
+        android:id="@+id/champBackground"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:alpha="0.2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <EditText
+        android:id="@+id/summonerText"
+        android:layout_width="wrap_content"
+        android:layout_height="47dp"
         android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="327dp"
+        android:layout_marginTop="270dp"
+        android:background="#2B2B2B"
         android:ems="10"
+        android:hint="Summoner Name..."
         android:inputType="textPersonName"
+        android:paddingHorizontal="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button"
+        style="@style/ButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="327dp"
+        android:layout_marginTop="270dp"
         android:onClick="searchName"
         android:text="@android:string/search_go"
-        app:layout_constraintStart_toEndOf="@+id/editText"
+        app:layout_constraintStart_toEndOf="@+id/summonerText"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -36,14 +48,16 @@
         android:layout_marginTop="87dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/lolhelpermainlogo" />
+        app:srcCompat="@drawable/whitelogonoback" />
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="411dp"
-        android:layout_height="725dp"
+        android:layout_height="650dp"
+        android:layout_marginTop="380dp"
         android:paddingHorizontal="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/faves"
@@ -51,5 +65,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </ScrollView>
+
+    <TextView
+        android:id="@+id/favText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="358dp"
+        android:layout_marginEnd="176dp"
+        android:text="Favorites"
+        style="@style/TextWhite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

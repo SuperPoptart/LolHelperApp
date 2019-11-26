@@ -1,5 +1,6 @@
 package com.example.lolhelperapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.example.lolhelperapp.models.Match;
 import com.example.lolhelperapp.models.MatchList;
 import com.example.lolhelperapp.models.Participant;
 import com.example.lolhelperapp.models.ParticipantIdentity;
@@ -17,24 +17,15 @@ import com.example.lolhelperapp.models.SingleMatch;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.gson.Gson;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.OrientationHelper;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -44,21 +35,170 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class ProfilePage extends AppCompatActivity {
 
-    final String key = "RGAPI-bec70f8e-6691-400a-af8d-281d5ae5e611";
+    final String key = "RGAPI-90f853af-92b5-4527-be0e-663430e6ca63";
 
     private String[] names = new String[0];
+
+    private HashMap<Integer, String> champList = new HashMap<Integer, String>() {{
+        put(226, "Aatrox");
+        put(103, "Ahri");
+        put(84, "Akali");
+        put(12, "Alistar");
+        put(32, "Amumu");
+        put(34, "Anivia");
+        put(1, "Annie");
+        put(22, "Ashe");
+        put(136, "AurelionSol");
+        put(268, "Azir");
+        put(432, "Bard");
+        put(53, "Blitzcrank");
+        put(63, "Brand");
+        put(201, "Braum");
+        put(51, "Caitlyn");
+        put(164, "Camille");
+        put(69, "Cassiopeia");
+        put(31, "Chogath");
+        put(42, "Corki");
+        put(122, "Darius");
+        put(131, "Diana");
+        put(119, "Draven");
+        put(36, "DrMundo");
+        put(245, "Ekko");
+        put(60, "Elise");
+        put(28, "Evelynn");
+        put(81, "Ezreal");
+        put(9, "Fiddlesticks");
+        put(114, "Fiora");
+        put(105, "Fizz");
+        put(3, "Galio");
+        put(41, "Gangplank");
+        put(86, "Garen");
+        put(150, "Gnar");
+        put(79, "Gragas");
+        put(104, "Graves");
+        put(120, "Hecarim");
+        put(74, "Heimerdinger");
+        put(420, "Illaoi");
+        put(39, "Irelia");
+        put(427, "Ivern");
+        put(40, "Janna");
+        put(59, "JarvanIV");
+        put(24, "Jax");
+        put(126, "Jayce");
+        put(202, "Jhin");
+        put(222, "Jinx");
+        put(145, "Kaisa");
+        put(429, "Kalista");
+        put(43, "Karma");
+        put(30, "Karthus");
+        put(38, "Kassadin");
+        put(55, "Katarina");
+        put(10, "Kayle");
+        put(141, "Kayn");
+        put(85, "Kennen");
+        put(121, "Khazix");
+        put(203, "Kindred");
+        put(240, "Kled");
+        put(96, "KogMaw");
+        put(7, "Leblanc");
+        put(64, "LeeSin");
+        put(89, "Leona");
+        put(127, "Lissandra");
+        put(236, "Lucian");
+        put(117, "Lulu");
+        put(99, "Lux");
+        put(54, "Malphite");
+        put(90, "Malzahar");
+        put(57, "Maokai");
+        put(11, "MasterYi");
+        put(21, "MissFortune");
+        put(62, "MonkeyKing");
+        put(82, "Mordekaiser");
+        put(25, "Morgana");
+        put(267, "Nami");
+        put(75, "Nasus");
+        put(111, "Nautilus");
+        put(518, "Neeko");
+        put(76, "Nidalee");
+        put(56, "Nocturne");
+        put(20, "Nunu");
+        put(2, "Olaf");
+        put(61, "Orianna");
+        put(80, "Pantheon");
+        put(78, "Poppy");
+        put(555, "Pyke");
+        put(246, "Qiyana");
+        put(133, "Quinn");
+        put(497, "Rakan");
+        put(33, "Rammus");
+        put(421, "RekSai");
+        put(58, "Renekton");
+        put(107, "Rengar");
+        put(92, "Riven");
+        put(68, "Rumble");
+        put(13, "Ryze");
+        put(113, "Sejuani");
+        put(235, "Senna");
+        put(35, "Shaco");
+        put(98, "Shen");
+        put(102, "Shyvana");
+        put(27, "Singed");
+        put(14, "Sion");
+        put(15, "Sivir");
+        put(72, "Skarner");
+        put(37, "Sona");
+        put(16, "Soraka");
+        put(50, "Swain");
+        put(517, "Sylas");
+        put(134, "Syndra");
+        put(223, "TahmKench");
+        put(163, "Taliyah");
+        put(91, "Talon");
+        put(44, "Taric");
+        put(17, "Teemo");
+        put(412, "Thresh");
+        put(18, "Tristana");
+        put(48, "Trundle");
+        put(23, "Tryndamere");
+        put(4, "TwistedFate");
+        put(29, "Twitch");
+        put(77, "Udyr");
+        put(6, "Urgot");
+        put(110, "Varus");
+        put(67, "Vayne");
+        put(45, "Veigar");
+        put(161, "Velkoz");
+        put(254, "Vi");
+        put(112, "Viktor");
+        put(8, "Vladmir");
+        put(106, "Volibear");
+        put(19, "Warwick");
+        put(498, "Xayah");
+        put(101, "Xerath");
+        put(5, "XinZhao");
+        put(157, "Yasuo");
+        put(83, "Yorick");
+        put(350, "Yuumi");
+        put(154, "Zac");
+        put(238, "Zed");
+        put(115, "Ziggs");
+        put(26, "Zilean");
+        put(142, "Zoe");
+        put(143, "Zyra");
+    }};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +212,7 @@ public class ProfilePage extends AppCompatActivity {
         ImageView profileIcon = findViewById(R.id.profileIcon2);
         String accId = "";
         Bundle bundle = getIntent().getExtras();
+        setTitle(bundle.getString("name") + "'s Profile");
 
 
         if (bundle != null) {
@@ -79,11 +220,13 @@ public class ProfilePage extends AppCompatActivity {
             level.setText(bundle.getString("summonerLevel"));
             String ico = "http://ddragon.leagueoflegends.com/cdn/9.22.1/img/profileicon/" + bundle.getString("profileIconId") + ".png";
             System.out.println(ico);
-//            profileIcon.setImageBitmap(getBitmapFromURL(ico));
             try {
                 URL url = new URL(ico);
                 Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                 profileIcon.setImageBitmap(bmp);
+                profileIcon.getLayoutParams().height = 220;
+                profileIcon.getLayoutParams().width = 220;
+                profileIcon.requestLayout();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -97,16 +240,6 @@ public class ProfilePage extends AppCompatActivity {
         if (!accId.isEmpty()) {
             matches.execute(stringUrl, accId);
         }
-
-        FloatingActionButton fab = findViewById(R.id.backer);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(new Intent(getApplicationContext(), MainActivity.class));
-                startActivity(intent);
-                finish();
-            }
-        });
 
 //        //GRABBING FAV
         String filename = "favorites.txt";
@@ -134,6 +267,22 @@ public class ProfilePage extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        for (String n : names) {
+            if (n.equals(bundle.getString("name"))) {
+//                Button favoriteButton = findViewById(R.id.floatingActionButton);
+//                favoriteButton.setBackgroundResource(R.drawable.btn_start_on);
+            }
+        }
+
+        FloatingActionButton fab = findViewById(R.id.backer);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(intent);
+                finish();
+            }
+        });
 
     }
 
@@ -143,17 +292,47 @@ public class ProfilePage extends AppCompatActivity {
      * @param view Passes current view
      */
     public void favoriteAccount(View view) {
+        boolean nameWritten = false;
         Bundle bundle = getIntent().getExtras();
         String filename = "favorites.txt";
         String fileContents = bundle.getString("name");
         fileContents += "#";
-
-        try {
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(filename, Context.MODE_APPEND));
-            outputStreamWriter.write(fileContents);
-            outputStreamWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (String n : names) {
+            if (n.equals(bundle.getString("name"))) {
+                nameWritten = true;
+                break;
+            }
+        }
+        if (nameWritten) {
+            String nameHolder = "";
+            for (String hold : names) {
+                if (!hold.equals(bundle.getString("name"))) {
+                    nameHolder += hold + "#";
+                }
+            }
+            try{
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(filename, Context.MODE_PRIVATE));
+                outputStreamWriter.write(nameHolder);
+                outputStreamWriter.close();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage("Removed from Favorites");
+                AlertDialog shower = alertDialogBuilder.create();
+                shower.show();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(filename, Context.MODE_APPEND));
+                outputStreamWriter.write(fileContents);
+                outputStreamWriter.close();
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+                alertDialogBuilder.setMessage("Added to Favorites");
+                AlertDialog shower = alertDialogBuilder.create();
+                shower.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -275,8 +454,8 @@ public class ProfilePage extends AppCompatActivity {
                         String stringUrl = "https://na1.api.riotgames.com/lol/match/v4/matches/" + matches.getMatches().get(i).getGameId() + "?api_key=" + key;
 //                        gameIds.add(stringUrl);
                         System.out.println(matches.getMatches().get(i).getGameId());
-                        SingleMatchTask singleMatch = new SingleMatchTask();
-                        singleMatch.execute(stringUrl, accId, String.valueOf(matches.getMatches().get(i).getTimestamp()), matches.getMatches().get(i).getRole());
+                        SingleMatchTask singleMatch = new SingleMatchTask((i + 1));
+                        singleMatch.execute(stringUrl, accId, String.valueOf(matches.getMatches().get(i).getTimestamp()), matches.getMatches().get(i).getRole(), matches.getMatches().get(i).getLane());
 
                     } else if (games < 150) {
                         games++;
@@ -305,6 +484,12 @@ public class ProfilePage extends AppCompatActivity {
         private double objecScore;
         private double aggScore;
         private double visScore;
+        private int gameNumber;
+        private String laneR;
+
+        SingleMatchTask(int i) {
+            gameNumber = i;
+        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -312,6 +497,7 @@ public class ProfilePage extends AppCompatActivity {
             String current = "";
             accId = strings[1];
             roleR = strings[3];
+            laneR = strings[4];
             gameTime = Long.parseLong(strings[2]);
             if (!strings[0].isEmpty()) {
                 String stringUrl = strings[0];
@@ -393,6 +579,7 @@ public class ProfilePage extends AppCompatActivity {
             String gamesDate = df.format(current);
 
             long minutes = TimeUnit.SECONDS.toMinutes(looker.getGameDuration());
+            long seconds = looker.getGameDuration() - (minutes * 60);
             int team = 0;
             if (actualHolder.getTeamId() == 100) {
             } else {
@@ -411,9 +598,9 @@ public class ProfilePage extends AppCompatActivity {
             }
             objecScore = actualHolder.getStats().getTurretKills();
             if (team == 0 && team1kills != 0) {
-                aggScore = ((actualHolder.getStats().getKills() + actualHolder.getStats().getAssists()) / team1kills) * 10;
+                aggScore = (((double) actualHolder.getStats().getKills() + (double) actualHolder.getStats().getAssists()) / (double) team1kills) * 10;
             } else if (team == 1 && team2kills != 0) {
-                aggScore = ((actualHolder.getStats().getKills() + actualHolder.getStats().getAssists()) / team2kills) * 10;
+                aggScore = (((double) actualHolder.getStats().getKills() + (double) actualHolder.getStats().getAssists()) / (double) team2kills) * 10;
             } else {
                 aggScore = 10;
             }
@@ -451,92 +638,164 @@ public class ProfilePage extends AppCompatActivity {
             DatabaseReference myRef = database.getReference("singleMatch");
             myRef.child(String.valueOf(looker.getGameId())).setValue(looker);
 
-            View tester = findViewById(R.id.match1);
+            int id = 0;
+            switch (gameNumber) {
+                case 1:
+                    id = R.id.match1;
+                    break;
+                case 2:
+                    id = R.id.match2;
+                    break;
+                case 3:
+                    id = R.id.match3;
+                    break;
+                case 4:
+                    id = R.id.match4;
+                    break;
+                case 5:
+                    id = R.id.match5;
+                    break;
+                case 6:
+                    id = R.id.match6;
+                    break;
+                case 7:
+                    id = R.id.match7;
+                    break;
+                case 8:
+                    id = R.id.match8;
+                    break;
+                case 9:
+                    id = R.id.match9;
+                    break;
+                case 10:
+                    id = R.id.match10;
+                    break;
+                case 11:
+                    id = R.id.match11;
+                    break;
+                case 12:
+                    id = R.id.match12;
+                    break;
+                case 13:
+                    id = R.id.match13;
+                    break;
+                case 14:
+                    id = R.id.match14;
+                    break;
+                case 15:
+                    id = R.id.match15;
+                    break;
+                case 16:
+                    id = R.id.match16;
+                    break;
+                case 17:
+                    id = R.id.match17;
+                    break;
+                case 18:
+                    id = R.id.match18;
+                    break;
+                case 19:
+                    id = R.id.match19;
+                    break;
+                case 20:
+                    id = R.id.match20;
+                    break;
+            }
+
+            View tester = findViewById(id);
             TextView kdaText = (TextView) tester.findViewById(R.id.kdaText);
-//
-//            HorizontalScrollView hSv = new HorizontalScrollView(ProfilePage.this);
-//            LinearLayout horoLay = new LinearLayout(ProfilePage.this);
-//            horoLay.setOrientation(LinearLayout.HORIZONTAL);
-//
-//            ScrollView firstSection = new ScrollView(ProfilePage.this);
-//            LinearLayout firstLay = new LinearLayout(ProfilePage.this);
-//            ScrollView secondSection = new ScrollView(ProfilePage.this);
-//            LinearLayout secondLay = new LinearLayout(ProfilePage.this);
-//            ScrollView fourthSection = new ScrollView(ProfilePage.this);
-//            LinearLayout fourthLay = new LinearLayout(ProfilePage.this);
-//
-//            HorizontalScrollView thirdSection = new HorizontalScrollView(ProfilePage.this);
-//            LinearLayout forThree = new LinearLayout(ProfilePage.this);
-//            forThree.setOrientation(LinearLayout.HORIZONTAL);
-//            LinearLayout thirdOne = new LinearLayout(ProfilePage.this);
-//            LinearLayout thirdTwo = new LinearLayout(ProfilePage.this);
-//            LinearLayout thirdThree = new LinearLayout(ProfilePage.this);
-//
-//            TextView winOrLoss = new TextView(ProfilePage.this);
-//            if (actualHolder.getStats().isWin()) {
-//                hSv.setBackgroundColor(Color.rgb(124, 192, 217));
-////                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Win Time: " + minutes + "m CS(" + csScore + "/min) " + superQueue;
-//                winOrLoss.setText("Win");
-//                firstLay.addView(winOrLoss);
-//            } else {
-//                hSv.setBackgroundColor(Color.rgb(255, 96, 96));
-////                String toSet = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists() + " Loss Time: " + minutes + "m CS(" + csScore + "/min) " + superQueue;
-//                winOrLoss.setText("Loss");
-//                firstLay.addView(winOrLoss);
-//            }
-//            ImageView champIcon = new ImageView(ProfilePage.this);
-//            champIcon.setImageDrawable(Drawable.createFromPath("C:\\Users\\Richard Sanchez\\AndroidStudioProjects\\LolHelperApp\\app\\src\\main\\res\\drawable\\lolhelpericon.png"));
-//            firstLay.addView(champIcon);
-//            TextView lane = new TextView(ProfilePage.this);
-//            lane.setText(roleR);
-//            firstLay.addView(lane);
-//            firstLay.setOrientation(LinearLayout.VERTICAL);
-//            firstSection.addView(firstLay);
-//
-//            TextView kDA = new TextView(ProfilePage.this);
-//            String kdaText = actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists();
-//            kDA.setText(kdaText);
-//            secondLay.addView(kDA);
-//            TextView kR = new TextView(ProfilePage.this);
-//            if (consScore == 2468) {
-//                kR.setText("Perfect");
-//            } else {
-//                kR.setText(String.valueOf(consScore));
-//            }
-//            secondLay.addView(kR);
-//            secondLay.setOrientation(LinearLayout.VERTICAL);
-//            secondSection.addView(secondLay);
-//
-//            ImageView item0 = new ImageView(ProfilePage.this);
-//            ImageView item1 = new ImageView(ProfilePage.this);
-//            ImageView item2 = new ImageView(ProfilePage.this);
-//            ImageView item3 = new ImageView(ProfilePage.this);
-//            ImageView item4 = new ImageView(ProfilePage.this);
-//            ImageView item5 = new ImageView(ProfilePage.this);
-//            thirdOne.addView(item0);
-//            thirdOne.addView(item1);
-//            thirdTwo.addView(item2);
-//            thirdTwo.addView(item3);
-//            thirdThree.addView(item4);
-//            thirdThree.addView(item5);
-//            forThree.addView(thirdOne);
-//            forThree.addView(thirdTwo);
-//            forThree.addView(thirdThree);
-//            thirdSection.addView(forThree);
-//
-//            ImageView trinket = new ImageView(ProfilePage.this);
-//            fourthLay.addView(trinket);
-//            TextView dater = new TextView(ProfilePage.this);
-//            fourthLay.addView(dater);
-//            fourthSection.addView(fourthLay);
-//
-//            horoLay.addView(firstSection);
-//            horoLay.addView(secondSection);
-//            horoLay.addView(thirdSection);
-//            horoLay.addView(fourthSection);
-//
-//            hSv.addView(horoLay);
-//            lay.addView(hSv);
+            TextView winText = tester.findViewById(R.id.wlText);
+            TextView csTotalText = tester.findViewById(R.id.totalCs);
+            TextView csPerMinuteText = tester.findViewById(R.id.csPerMin);
+            TextView laneText = tester.findViewById(R.id.laneText);
+            ImageView champIcon = tester.findViewById(R.id.characterIcon);
+            TextView killRatio = tester.findViewById(R.id.killRateText);
+            ImageView item1 = tester.findViewById(R.id.item1);
+            ImageView item2 = tester.findViewById(R.id.item2);
+            ImageView item3 = tester.findViewById(R.id.item3);
+            ImageView item4 = tester.findViewById(R.id.item4);
+            ImageView item5 = tester.findViewById(R.id.item5);
+            ImageView item6 = tester.findViewById(R.id.item6);
+            ImageView trinket = tester.findViewById(R.id.trinket);
+            TextView visionStuff = tester.findViewById(R.id.visionText);
+            TextView nameSpot = tester.findViewById(R.id.champName);
+//            TextView rolerText = tester.findViewById(R.id.roleText);
+            TextView timeStamp = tester.findViewById(R.id.gameTimestamp);
+
+            DecimalFormat formatDecimal = new DecimalFormat("##.##");
+            tester.setVisibility(View.VISIBLE);
+
+            csTotalText.setText("Total CS: " + (actualHolder.getStats().getNeutralMinionsKilled() + actualHolder.getStats().getTotalMinionsKilled()));
+            csPerMinuteText.setText("(" + csScore + "/Min)");
+            laneText.setText(laneR);
+            killRatio.setText("(" + formatDecimal.format(consScore) + ") KR");
+            kdaText.setText(actualHolder.getStats().getKills() + "/" + actualHolder.getStats().getDeaths() + "/" + actualHolder.getStats().getAssists());
+
+            String champName = "";
+            for (int key : champList.keySet()) {
+                if (key == actualHolder.getChampionId()) {
+                    champName = champList.get(key);
+                }
+            }
+
+            champIcon.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/champion/" + champName + ".png"));
+            champIcon.getLayoutParams().height = 150;
+            champIcon.getLayoutParams().width = 150;
+            champIcon.requestLayout();
+
+            item1.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem0() + ".png"));
+            item1.getLayoutParams().height = 90;
+            item1.getLayoutParams().width = 90;
+            item1.requestLayout();
+
+            item2.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem1() + ".png"));
+            item2.getLayoutParams().height = 90;
+            item2.getLayoutParams().width = 90;
+            item2.requestLayout();
+
+            item3.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem2() + ".png"));
+            item3.getLayoutParams().height = 90;
+            item3.getLayoutParams().width = 90;
+            item3.requestLayout();
+
+            item4.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem3() + ".png"));
+            item4.getLayoutParams().height = 90;
+            item4.getLayoutParams().width = 90;
+            item4.requestLayout();
+
+            item5.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem4() + ".png"));
+            item5.getLayoutParams().height = 90;
+            item5.getLayoutParams().width = 90;
+            item5.requestLayout();
+
+            item6.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem5() + ".png"));
+            item6.getLayoutParams().height = 90;
+            item6.getLayoutParams().width = 90;
+            item6.requestLayout();
+
+            trinket.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem6() + ".png"));
+            trinket.getLayoutParams().height = 90;
+            trinket.getLayoutParams().width = 90;
+            trinket.requestLayout();
+
+            if (champName.equals("MonkeyKing")) {
+                champName = "Wukong";
+            }
+
+            String str = String.format("%02d", seconds);
+//            rolerText.setText(laneR);
+            timeStamp.setText(String.valueOf(minutes) + ":" + str);
+            nameSpot.setText(champName);
+
+            visionStuff.setText(String.valueOf(actualHolder.getStats().getVisionScore()));
+
+            if (actualHolder.getStats().isWin()) {
+                tester.setBackgroundColor(Color.rgb(124, 192, 217));
+                winText.setText("Win");
+            } else {
+                tester.setBackgroundColor(Color.rgb(255, 96, 96));
+                winText.setText("Loss");
+            }
         }
     }
 

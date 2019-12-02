@@ -49,10 +49,18 @@
                         android:id="@+id/characterIcon"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+
                         tools:srcCompat="@tools:sample/avatars[0]" />
 
                     <TextView
                         android:id="@+id/champName"
+                        style="@style/CenterText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/charLevelText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         style="@style/CenterText"
@@ -166,14 +174,14 @@
 
                             <ImageView
                                 android:id="@+id/item1"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_width="90dp"
+                                android:layout_height="90dp"
                                 tools:srcCompat="@tools:sample/avatars[0]" />
 
                             <ImageView
                                 android:id="@+id/item4"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_width="90dp"
+                                android:layout_height="90dp"
                                 tools:srcCompat="@tools:sample/avatars[0]" />
                         </LinearLayout>
                     </ScrollView>
@@ -191,14 +199,14 @@
 
                             <ImageView
                                 android:id="@+id/item2"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_width="90dp"
+                                android:layout_height="90dp"
                                 tools:srcCompat="@tools:sample/avatars" />
 
                             <ImageView
                                 android:id="@+id/item5"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_width="90dp"
+                                android:layout_height="90dp"
                                 tools:srcCompat="@tools:sample/avatars" />
                         </LinearLayout>
                     </ScrollView>
@@ -216,14 +224,14 @@
 
                             <ImageView
                                 android:id="@+id/item3"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_width="90dp"
+                                android:layout_height="90dp"
                                 tools:srcCompat="@tools:sample/avatars" />
 
                             <ImageView
                                 android:id="@+id/item6"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_width="90dp"
+                                android:layout_height="90dp"
                                 tools:srcCompat="@tools:sample/avatars" />
                         </LinearLayout>
                     </ScrollView>

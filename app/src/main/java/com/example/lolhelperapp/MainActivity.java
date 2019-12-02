@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +35,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private String[] names = new String[0];
-    final String key = "RGAPI-90f853af-92b5-4527-be0e-663430e6ca63";
+    final String key = "RGAPI-90ab61ec-cefe-405d-aa58-abb748525379";
     private HashMap<Integer, String> champList = new HashMap<Integer, String>() {{
         put(226, "Aatrox");
         put(103, "Ahri");
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         put(20, "Nunu");
         put(2, "Olaf");
         put(61, "Orianna");
+        put(516, "Ornn");
         put(80, "Pantheon");
         put(78, "Poppy");
         put(555, "Pyke");
@@ -221,9 +223,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        DisplayMetrics display = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(display);
+        int screenwidth = display.widthPixels;
+
         ImageView back = findViewById(R.id.champBackground);
+//        back.getLayoutParams().width = screenwidth;
         List<Integer> keysAsArray = new ArrayList<Integer>(champList.keySet());
         back.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/img/champion/splash/"+ champList.get(keysAsArray.get(r.nextInt(keysAsArray.size()))) +"_0.jpg"));
+        back.requestLayout();
 
         for (final String singleName : names) {
             final MainActivity mainAct = this;

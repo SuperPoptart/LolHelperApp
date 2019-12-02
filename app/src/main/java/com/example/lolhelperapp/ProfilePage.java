@@ -25,6 +25,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -48,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ProfilePage extends AppCompatActivity {
 
-    final String key = "RGAPI-90f853af-92b5-4527-be0e-663430e6ca63";
+    final String key = "RGAPI-90ab61ec-cefe-405d-aa58-abb748525379";
 
     private String[] names = new String[0];
 
@@ -137,6 +138,7 @@ public class ProfilePage extends AppCompatActivity {
         put(20, "Nunu");
         put(2, "Olaf");
         put(61, "Orianna");
+        put(516, "Ornn");
         put(80, "Pantheon");
         put(78, "Poppy");
         put(555, "Pyke");
@@ -218,7 +220,7 @@ public class ProfilePage extends AppCompatActivity {
         if (bundle != null) {
             summoner.setText(bundle.getString("name"));
             level.setText(bundle.getString("summonerLevel"));
-            String ico = "http://ddragon.leagueoflegends.com/cdn/9.22.1/img/profileicon/" + bundle.getString("profileIconId") + ".png";
+            String ico = "http://ddragon.leagueoflegends.com/cdn/9.23.1/img/profileicon/" + bundle.getString("profileIconId") + ".png";
             System.out.println(ico);
             try {
                 URL url = new URL(ico);
@@ -236,7 +238,7 @@ public class ProfilePage extends AppCompatActivity {
         }
 
         String stringUrl = "https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accId + "?api_key=" + key;
-        MatchHistoryTask matches = new MatchHistoryTask();
+        final MatchHistoryTask matches = new MatchHistoryTask();
         if (!accId.isEmpty()) {
             matches.execute(stringUrl, accId);
         }
@@ -278,6 +280,8 @@ public class ProfilePage extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                matches.cancel(true);
+                matches.singleMatch.cancel(true);
                 Intent intent = new Intent(new Intent(getApplicationContext(), MainActivity.class));
                 startActivity(intent);
                 finish();
@@ -310,7 +314,7 @@ public class ProfilePage extends AppCompatActivity {
                     nameHolder += hold + "#";
                 }
             }
-            try{
+            try {
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(filename, Context.MODE_PRIVATE));
                 outputStreamWriter.write(nameHolder);
                 outputStreamWriter.close();
@@ -318,7 +322,7 @@ public class ProfilePage extends AppCompatActivity {
                 alertDialogBuilder.setMessage("Removed from Favorites");
                 AlertDialog shower = alertDialogBuilder.create();
                 shower.show();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
@@ -398,6 +402,7 @@ public class ProfilePage extends AppCompatActivity {
         private List<Integer> totalObjectivesScore = new ArrayList<>();
         private List<Integer> totalAggressionScore = new ArrayList<>();
         private List<Integer> totalVisionScore = new ArrayList<>();
+        private SingleMatchTask singleMatch;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -454,7 +459,7 @@ public class ProfilePage extends AppCompatActivity {
                         String stringUrl = "https://na1.api.riotgames.com/lol/match/v4/matches/" + matches.getMatches().get(i).getGameId() + "?api_key=" + key;
 //                        gameIds.add(stringUrl);
                         System.out.println(matches.getMatches().get(i).getGameId());
-                        SingleMatchTask singleMatch = new SingleMatchTask((i + 1));
+                        singleMatch = new SingleMatchTask((i + 1));
                         singleMatch.execute(stringUrl, accId, String.valueOf(matches.getMatches().get(i).getTimestamp()), matches.getMatches().get(i).getRole(), matches.getMatches().get(i).getLane());
 
                     } else if (games < 150) {
@@ -617,7 +622,7 @@ public class ProfilePage extends AppCompatActivity {
                     superQueue = "Normal";
                     break;
                 case 420:
-                    superQueue = "Ranked Solo";
+                    superQueue = "Solo";
                     break;
                 case 430:
                     superQueue = "Blind";
@@ -626,7 +631,7 @@ public class ProfilePage extends AppCompatActivity {
                     superQueue = "Flex";
                     break;
                 case 450:
-                    superQueue = "Aram";
+                    superQueue = "ARAM";
                     break;
                 default:
                     break;
@@ -637,68 +642,91 @@ public class ProfilePage extends AppCompatActivity {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference("singleMatch");
             myRef.child(String.valueOf(looker.getGameId())).setValue(looker);
+            ProgressBar loader = findViewById(R.id.gameProgress);
+            TextView loaderText = findViewById(R.id.loadingText);
 
             int id = 0;
             switch (gameNumber) {
                 case 1:
                     id = R.id.match1;
+                    loader.setProgress(5);
                     break;
                 case 2:
                     id = R.id.match2;
+                    loader.setProgress(10);
                     break;
                 case 3:
                     id = R.id.match3;
+                    loader.setProgress(15);
                     break;
                 case 4:
                     id = R.id.match4;
+                    loader.setProgress(20);
                     break;
                 case 5:
                     id = R.id.match5;
+                    loader.setProgress(25);
                     break;
                 case 6:
                     id = R.id.match6;
+                    loader.setProgress(30);
                     break;
                 case 7:
                     id = R.id.match7;
+                    loader.setProgress(35);
                     break;
                 case 8:
                     id = R.id.match8;
+                    loader.setProgress(40);
                     break;
                 case 9:
                     id = R.id.match9;
+                    loader.setProgress(45);
                     break;
                 case 10:
                     id = R.id.match10;
+                    loader.setProgress(50);
                     break;
                 case 11:
                     id = R.id.match11;
+                    loader.setProgress(55);
                     break;
                 case 12:
                     id = R.id.match12;
+                    loader.setProgress(55);
                     break;
                 case 13:
                     id = R.id.match13;
+                    loader.setProgress(60);
                     break;
                 case 14:
                     id = R.id.match14;
+                    loader.setProgress(65);
                     break;
                 case 15:
                     id = R.id.match15;
+                    loader.setProgress(70);
                     break;
                 case 16:
                     id = R.id.match16;
+                    loader.setProgress(75);
                     break;
                 case 17:
                     id = R.id.match17;
+                    loader.setProgress(80);
                     break;
                 case 18:
                     id = R.id.match18;
+                    loader.setProgress(85);
                     break;
                 case 19:
                     id = R.id.match19;
+                    loader.setProgress(93);
                     break;
                 case 20:
                     id = R.id.match20;
+                    loaderText.setText("Done");
+                    loader.setProgress(100);
                     break;
             }
 
@@ -721,6 +749,8 @@ public class ProfilePage extends AppCompatActivity {
             TextView nameSpot = tester.findViewById(R.id.champName);
 //            TextView rolerText = tester.findViewById(R.id.roleText);
             TextView timeStamp = tester.findViewById(R.id.gameTimestamp);
+            TextView charLevel = tester.findViewById(R.id.charLevelText);
+
 
             DecimalFormat formatDecimal = new DecimalFormat("##.##");
             tester.setVisibility(View.VISIBLE);
@@ -738,42 +768,42 @@ public class ProfilePage extends AppCompatActivity {
                 }
             }
 
-            champIcon.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/champion/" + champName + ".png"));
+            champIcon.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.23.1/img/champion/" + champName + ".png"));
             champIcon.getLayoutParams().height = 150;
             champIcon.getLayoutParams().width = 150;
             champIcon.requestLayout();
 
-            item1.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem0() + ".png"));
+            item1.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.23.1/img/item/" + actualHolder.getStats().getItem0() + ".png"));
             item1.getLayoutParams().height = 90;
             item1.getLayoutParams().width = 90;
             item1.requestLayout();
 
-            item2.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem1() + ".png"));
+            item2.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.23.1/img/item/" + actualHolder.getStats().getItem1() + ".png"));
             item2.getLayoutParams().height = 90;
             item2.getLayoutParams().width = 90;
             item2.requestLayout();
 
-            item3.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem2() + ".png"));
+            item3.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.23.1/img/item/" + actualHolder.getStats().getItem2() + ".png"));
             item3.getLayoutParams().height = 90;
             item3.getLayoutParams().width = 90;
             item3.requestLayout();
 
-            item4.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem3() + ".png"));
+            item4.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.23.1/img/item/" + actualHolder.getStats().getItem3() + ".png"));
             item4.getLayoutParams().height = 90;
             item4.getLayoutParams().width = 90;
             item4.requestLayout();
 
-            item5.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem4() + ".png"));
+            item5.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.23.1/img/item/" + actualHolder.getStats().getItem4() + ".png"));
             item5.getLayoutParams().height = 90;
             item5.getLayoutParams().width = 90;
             item5.requestLayout();
 
-            item6.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem5() + ".png"));
+            item6.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.23.1/img/item/" + actualHolder.getStats().getItem5() + ".png"));
             item6.getLayoutParams().height = 90;
             item6.getLayoutParams().width = 90;
             item6.requestLayout();
 
-            trinket.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.22.1/img/item/" + actualHolder.getStats().getItem6() + ".png"));
+            trinket.setImageDrawable(LoadImageFromWebOperations("http://ddragon.leagueoflegends.com/cdn/9.23.1/img/item/" + actualHolder.getStats().getItem6() + ".png"));
             trinket.getLayoutParams().height = 90;
             trinket.getLayoutParams().width = 90;
             trinket.requestLayout();
@@ -784,17 +814,22 @@ public class ProfilePage extends AppCompatActivity {
 
             String str = String.format("%02d", seconds);
 //            rolerText.setText(laneR);
-            timeStamp.setText(String.valueOf(minutes) + ":" + str);
+            timeStamp.setText(String.valueOf(minutes) + "m " + str + "s");
+//            System.out.println(champName);
+//            String setter = getString(R.string.champ_and_level, champName);
             nameSpot.setText(champName);
+            charLevel.setText("(" + actualHolder.getStats().getChampLevel() + ")");
 
             visionStuff.setText(String.valueOf(actualHolder.getStats().getVisionScore()));
 
             if (actualHolder.getStats().isWin()) {
                 tester.setBackgroundColor(Color.rgb(124, 192, 217));
-                winText.setText("Win");
+                String toSet = getString(R.string.wl_and_queue, "Win", superQueue);
+                winText.setText(toSet);
             } else {
                 tester.setBackgroundColor(Color.rgb(255, 96, 96));
-                winText.setText("Loss");
+                String toSet = getString(R.string.wl_and_queue, "Loss", superQueue);
+                winText.setText(toSet);
             }
         }
     }

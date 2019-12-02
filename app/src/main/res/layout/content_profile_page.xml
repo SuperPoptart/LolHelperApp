@@ -31,18 +31,18 @@
 
     <TextView
         android:id="@+id/sumName"
-        style="@style/TextWhite"
+        style="@style/TextWhiteBoldBig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="39dp"
+        android:layout_marginTop="30dp"
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/profileIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/level"
-        style="@style/TextWhite"
+        style="@style/TextWhiteBoldBig"
         android:layout_width="35dp"
         android:layout_height="25dp"
         android:layout_marginStart="5dp"
@@ -51,9 +51,20 @@
         app:layout_constraintStart_toEndOf="@+id/levelLabel"
         app:layout_constraintTop_toBottomOf="@+id/sumName" />
 
+
+    <ProgressBar
+        android:id="@+id/gameProgress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="80dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileIcon" />
+
     <TextView
         android:id="@+id/levelLabel"
-        style="@style/TextWhite"
+        style="@style/TextWhiteBoldBig"
         android:layout_width="23dp"
         android:layout_height="24dp"
         android:layout_marginStart="32dp"
@@ -78,7 +89,7 @@
     <ScrollView
         android:id="@+id/matches"
         android:layout_width="412dp"
-        android:layout_height="549dp"
+        android:layout_height="535dp"
         android:layout_marginTop="13dp"
         android:paddingHorizontal="20dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -225,6 +236,17 @@
         style="@style/ButtonStyle"
         app:layout_constraintTop_toBottomOf="@+id/floatingActionButton"
         tools:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/loadingText"
+        style="@style/TextWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="26dp"
+        android:text="Loading..."
+        app:layout_constraintStart_toEndOf="@+id/gameProgress"
+        app:layout_constraintTop_toBottomOf="@+id/level" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

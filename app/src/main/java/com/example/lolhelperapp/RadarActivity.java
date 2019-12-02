@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -66,12 +67,12 @@ public class RadarActivity extends AppCompatActivity {
 
         XAxis xAxis = chart.getXAxis();
 //        xAxis.setTypeface(tfLight);
-        xAxis.setTextSize(9f);
+        xAxis.setTextSize(20f);
         xAxis.setYOffset(0f);
         xAxis.setXOffset(0f);
         xAxis.setValueFormatter(new ValueFormatter() {
 
-            private final String[] mActivities = new String[]{"Farming", "Vision", "Objectives", "Aggression", "Consistency", "Versatility"};
+            private final String[] mActivities = new String[]{"F", "V", "O", "A", "C", "U"};
 
             @Override
             public String getFormattedValue(float value) {
@@ -83,7 +84,7 @@ public class RadarActivity extends AppCompatActivity {
         YAxis yAxis = chart.getYAxis();
 //        yAxis.setTypeface(tfLight);
         yAxis.setLabelCount(5, false);
-        yAxis.setTextSize(9f);
+        yAxis.setTextSize(12f);
         yAxis.setAxisMinimum(0f);
         yAxis.setAxisMaximum(80f);
         yAxis.setDrawLabels(false);
@@ -101,6 +102,13 @@ public class RadarActivity extends AppCompatActivity {
 
     public void backOneActivity(View view) {
         finish();
+    }
+
+    public void showKey(View view) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("F = Farming or CS\nV = Vision\nO = Objectives\nA = Aggression\nC = Consistency\nU = Utility or Versatility\nTap anywhere to continue");
+        AlertDialog shower = alertDialogBuilder.create();
+        shower.show();
     }
 
     private void setData() {
@@ -122,8 +130,8 @@ public class RadarActivity extends AppCompatActivity {
             float val2 = (float) (Math.random() * mul) + min;
             entries2.add(new RadarEntry(val2));
 
-            if(val1 < smallest){
-                smallest = val1;
+            if(val2 < smallest){
+                smallest = val2;
                 indexSmallest = i;
             }
         }
@@ -131,26 +139,26 @@ public class RadarActivity extends AppCompatActivity {
         TextView helper = findViewById(R.id.helperText);
         switch (indexSmallest){
             case 0:
-                helper.setText("Farming low fffffffffffffffffffffffff");
+                helper.setText("To truly increase you ability to get a lot of gold you'll need to learn champion specific ways to farm. A quick and easy way to find these out for your champion is to download a high level player's replay. This can now be done by accessing their matchhistory in the league client. Just skip to the part where they last hit under tower, push during the laning phase, clear side waves, or clear the jungle. Take 10 min to observe and learn and this can save you a large amount of minions over your league career.");
                 break;
             case 1:
-                helper.setText("Vision low vvvvvvvvvvvvvvvvvvvvvvvvvv");
+                helper.setText("You can leave wards in the middle of the lane just outside of tower range to track enemy movement. This is useful in mid lane where you can track players crossing the center of the map, or to see if the enemy Mid is roaming. This isn't just the Mid laner's job though, anyone can pitch in during the mid to late game. It's rare to see players use this trick below Diamond level, so be apart of the few who take advantage of this now.");
                 break;
             case 2:
-                helper.setText("Objectives low ooooooooooooooooooooo");
+                helper.setText("Even if the rest of the enemy team is there, not having their jungler forces them into a 4v5 or giving away a free Baron. If you see the enemy jungler on the bot side of the map clearing gromp / krugs or even taking bot lane farm you can look to rush Baron if your comp can do it at a decent speed. However, be wary against teams with champions like Gangplank, Ziggs, or anything else with strong poke since they can heavily punish a Baron start even without their jungler.");
                 break;
             case 3:
-                helper.setText("Aggression low aaaaaaaaaaaaaaaaaaaaa");
+                helper.setText("Information is your greatest ally in League. If you can estimate the distance your allies need to travel versus your enemies to collapse on your duel then you can always choose fights where your team will show up first. Not only does this give you confidence in that your duel but it's a way to possible bait a bigger teamfight where your team has the advantage.");
                 break;
             case 4:
-                helper.setText("Consistency low ccccccccccccccccccccccccccc");
+                helper.setText("To increase your consistency in lane you’ll need to remove any outside forces that could impact your performance like deaths from roams or ganks. One trick is to ask yourself where the enemy jungler could be everytime you want to take a trade. If you do not have wards up, and you notice you are the only gankable lane do not take the trade.");
                 break;
             case 5:
-                helper.setText("Versatility low sssssssssssssssssssssss");
+                helper.setText("For every lane in League of Legends there is a pool of 20 or more champions to play that each have a unique playstyle. No matter what lane you are playing your goal should be to play at least one in each category for your lane. Say you are a jungler, you should be able to play at least one tank, damage carry, and ability power champion. All lanes have something like this so try some champions in a different category than normal so you can get a bigger pool.");
                 break;
         }
 
-        RadarDataSet set1 = new RadarDataSet(entries1, "Last Week");
+        RadarDataSet set1 = new RadarDataSet(entries1, "Past 20 Games");
         set1.setColor(Color.rgb(103, 110, 129));
         set1.setFillColor(Color.rgb(103, 110, 129));
         set1.setDrawFilled(true);
@@ -159,7 +167,7 @@ public class RadarActivity extends AppCompatActivity {
         set1.setDrawHighlightCircleEnabled(true);
         set1.setDrawHighlightIndicators(false);
 
-        RadarDataSet set2 = new RadarDataSet(entries2, "This Week");
+        RadarDataSet set2 = new RadarDataSet(entries2, "Past 5 Games");
         set2.setColor(Color.rgb(121, 162, 175));
         set2.setFillColor(Color.rgb(121, 162, 175));
         set2.setDrawFilled(true);

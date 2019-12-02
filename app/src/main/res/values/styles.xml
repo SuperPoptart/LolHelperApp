@@ -21,8 +21,31 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
+    <style name="TextWhiteBold">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextWhiteBoldCenter">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="TextWhiteBoldBig">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
     <style name="CenterText">
         <item name="android:textAlignment">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="possibleBackground">
+        <item name="android:backgroundTint">@color/colorAccent</item>
+        <item name="android:background">@color/colorAccent</item>
     </style>
 
     <style name="ButtonStyle">
@@ -30,6 +53,10 @@
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:strokeColor">#000000</item>
         <item name="android:strokeWidth">2</item>
+    </style>
+
+    <style name="MakeBarWhitePlease">
+        <item name="android:color">#FFFFFF</item>
     </style>
 
 </resources>

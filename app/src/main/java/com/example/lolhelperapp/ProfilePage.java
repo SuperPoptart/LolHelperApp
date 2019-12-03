@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ProfilePage extends AppCompatActivity {
 
-    final String key = "RGAPI-90ab61ec-cefe-405d-aa58-abb748525379";
+    final String key = "RGAPI-cd367e6c-8e21-497e-9beb-fc5f3e3be811";
 
     private String[] names = new String[0];
 

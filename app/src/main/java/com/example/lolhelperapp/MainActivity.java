@@ -35,7 +35,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private String[] names = new String[0];
-    final String key = "RGAPI-90ab61ec-cefe-405d-aa58-abb748525379";
+    final String key = "RGAPI-cd367e6c-8e21-497e-9beb-fc5f3e3be811";
     private HashMap<Integer, String> champList = new HashMap<Integer, String>() {{
         put(226, "Aatrox");
         put(103, "Ahri");

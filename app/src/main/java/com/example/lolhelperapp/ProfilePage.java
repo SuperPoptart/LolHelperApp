@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ProfilePage extends AppCompatActivity {
 
-    final String key = "RGAPI-cd367e6c-8e21-497e-9beb-fc5f3e3be811";
+    final String key = "RGAPI-d548b3f3-42c9-4e23-8b3e-59346a21ae62";
 
     private String[] names = new String[0];
 
@@ -61,6 +61,7 @@ public class ProfilePage extends AppCompatActivity {
         put(32, "Amumu");
         put(34, "Anivia");
         put(1, "Annie");
+        put(523, "Aphelios");
         put(22, "Ashe");
         put(136, "AurelionSol");
         put(268, "Azir");
@@ -117,6 +118,7 @@ public class ProfilePage extends AppCompatActivity {
         put(7, "Leblanc");
         put(64, "LeeSin");
         put(89, "Leona");
+        put(876, "Lillia");
         put(127, "Lissandra");
         put(236, "Lucian");
         put(117, "Lulu");
@@ -154,6 +156,7 @@ public class ProfilePage extends AppCompatActivity {
         put(13, "Ryze");
         put(113, "Sejuani");
         put(235, "Senna");
+        put(875, "Sett");
         put(35, "Shaco");
         put(98, "Shen");
         put(102, "Shyvana");
@@ -185,7 +188,7 @@ public class ProfilePage extends AppCompatActivity {
         put(161, "Velkoz");
         put(254, "Vi");
         put(112, "Viktor");
-        put(8, "Vladmir");
+        put(8, "Vladimir");
         put(106, "Volibear");
         put(19, "Warwick");
         put(498, "Xayah");
